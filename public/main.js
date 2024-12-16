@@ -16,7 +16,7 @@ document.addEventListener("click", async (event) => {
   if (dashboard) {
     event.preventDefault()
     contentHTML = dashboardHtml;
-    history.pushState(contentHTML, "", dashboard);
+    history.pushState(contentHTML, "", '/');
   }
 
   if (trackTime){
