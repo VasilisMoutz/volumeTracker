@@ -1,44 +1,39 @@
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-const bcrypt = require('bcrypt');
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import path from 'path';
+import { auth } from './middlewares/auth.js';
+import cookieParser from 'cookie-parser';
 
+// routing imports
+import generic from './routes/generic.route.js';
+import users from './routes/user.route.js'
+
+
+ 
 dotenv.config();
 const app = express();
-const saltRounds = Number(process.env.SALT_ROUNDS);
+const jsonParser = bodyParser.json();
+const uri = process.env.DB_URI;
+const __dirname = path.resolve();
+const router = express.Router();
 
-app.use(express.static(__dirname + "/public"));
+try {
+  mongoose.connect(uri);
+} catch (err) {
+  console.log(err);
+}
 
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
+app.use('/auth/login', express.static('public/auth'));
+app.use('/api', users);
+app.use(auth);
+app.use(express.static('public'))
+app.use('/app', generic);
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
-})
-
-app.post('/api/register', jsonParser, async (req, res) => {
-
-  try {
-    const { username, password } = req.body;
-
-    bcrypt.hash(password, saltRounds, function(err, hash) {
-      if (err) {
-        res.status(500).json({error: err});
-        return;
-      }
-      console.log(hash);
-    });
-
-  } catch (error) {
-    res.status(500).json({error: 'Registration failed'});
-  }
-
-  res.status(200).json({error: 'Registration complete'});
-})
-
-app.get('/*', (req, res) => {
-  res.redirect('/');
-})
 
 let PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
