@@ -2,35 +2,42 @@ import { dashboardHtml } from "/modules/dashboard.js";
 import { createProjectHtml } from "/modules/createProject.js";
 import { trackTimeHtml } from "/modules/trackTime.js"
 
-const content = document.getElementById('content');
+const content = document.getElementById("content");
+const navLinks = document.querySelectorAll("button");
 const initialState = content.innerHTML;
 let contentHTML;
 
 history.replaceState(initialState, "", document.location.href);
 
+initialLoad();
+
 document.addEventListener("click", async (event) => {
-  const dashboard = event.target.getAttribute("data-dashboard");
-  const project = event.target.getAttribute("data-create-project");
-  const trackTime = event.target.getAttribute("data-track-time");
 
-  if (dashboard) {
-    event.preventDefault()
-    contentHTML = dashboardHtml;
-    history.pushState(contentHTML, "", '/');
+  const clickedItem = event.target.getAttribute("data");
+
+  switch (clickedItem) {
+    case 'dashboard':
+      event.preventDefault()
+      console.log('dashboard');
+      addClickedStyles(event);
+      contentHTML = dashboardHtml;
+      history.pushState(contentHTML, "", '/');
+      break;
+    case 'create-project':
+      event.preventDefault()
+      console.log('create-project');
+      addClickedStyles(event);
+      contentHTML = trackTimeHtml;
+      history.pushState(contentHTML, "", clickedItem);
+      break;
+    case 'track-time':
+      event.preventDefault()
+      console.log('track-time');
+      addClickedStyles(event);
+      contentHTML = createProjectHtml;
+      history.pushState(contentHTML, "", clickedItem);
+      break;
   }
-
-  if (trackTime){
-    event.preventDefault()
-    contentHTML = trackTimeHtml;
-    history.pushState(contentHTML, "", trackTime);
-  }
-
-  if (project) {
-    event.preventDefault()
-    contentHTML = createProjectHtml;
-    history.pushState(contentHTML, "", project);
-  }
-
   content.innerHTML = contentHTML;
 })
 
@@ -44,6 +51,31 @@ window.addEventListener("popstate", (event) => {
   }
 });
 
+function addClickedStyles(event) {
+
+  event.target.setAttribute('active', 'true')
+
+  navLinks.forEach(element => {
+    if (element.getAttribute('active') === 'true'){
+      if (element !== event.target) {
+        element.classList.remove('border-l-4');
+        element.classList.remove('bg-primary-200');
+        element.classList.remove('ml-4');
+        element.setAttribute('active', 'false');
+      } else {
+        element.classList.add('border-l-4');
+        element.classList.add('bg-primary-200');
+        element.classList.add('ml-4');
+      }
+    }  
+  });
+}
+
+function initialLoad() {
+  contentHTML = dashboardHtml;
+  history.pushState(contentHTML, "", '/');
+  content.innerHTML = contentHTML;
+}
 
 
 

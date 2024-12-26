@@ -1,8 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 @font-face {
-  font-family: Poppins;
-  src: url(fonts/Poppins-Medium.ttf);
+  font-family: 'Mona Sans';
+  src: url(fonts/MonaSans-Regular.woff);
+  font-weight: 400;
 }
+
 @font-face {
+  font-family: 'Mona Sans';
+  src: url(fonts/MonaSans-Medium.woff);
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(fonts/MonaSans-Bold.woff);
+  font-weight: 700; 
+}
+
+@font-face {
+  font-family: 'Mona Sans';
+  src: url(fonts/MonaSans-Light.woff);
+  font-weight: 100;
+}
+
+
+/* @font-face {
   font-family: PoppinsThin;
   src: url(fonts/Poppins-Thin.ttf);
 }
@@ -10,57 +36,12 @@
 @font-face {
   font-family: PoppinsBold;
   src: url(fonts/Poppins-Bold.ttf);
-}
+} */
 
-
+/* 
 body {
-  background-color: #1E203A;
   font-family: Poppins;
   color: aliceblue;
   margin: 0;
   letter-spacing: 1px;
-}
-
-.app {
-  display: flex;
-}
-
-.sidebar {
-  width: 200px;
-  background-color: #242C48;
-  height: 100vh;
-  padding: 2rem;
-}
-
-.brand {
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
-  text-align: center;
-  font-family: poppinsThin;
-  letter-spacing: 2px;
-  font-size: 1.5em;
-}
-
-.logo {
-  max-width: 100px;
-  margin: 0 auto;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.menu ul li {
-  padding: 0.5em 0;
-}
-
-.logo {
-  width: 100%;
-}
-
-.content {
-
-}
+} */
