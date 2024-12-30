@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import jsonwebtoken from 'jsonwebtoken'
 
 export async function login(req, res) {
+
     try {
     const {username, password} = req.body;
 
@@ -22,15 +23,26 @@ export async function login(req, res) {
       throw new Error('Invalid Credentials');
     }
 
-    const token = jsonwebtoken.sign({username}, process.env.JWT_SECRET, { expiresIn: '1h' })
+    const token = await jsonwebtoken.sign({username}, process.env.JWT_SECRET, { expiresIn: '1h' })
+
+    const userDetails = {
+      firstname: user.name,
+      lastname: user.lastname
+    };
 
     res.cookie('authToken', token, {
       httpOnly: true,
       sameSite: 'Strict',
       maxAge: 24 * 60 * 60 * 1000
     });
+    
+    res.cookie('userDetails', JSON.stringify(userDetails), {
+      httpOnly: true,
+      sameSite: 'Strict',
+      maxAge: 24 * 60 * 60 * 1000
+    });
 
-    return res.status(200).json({message: "Login Succesfull", token});
+    res.status(200).json({message: "Login Succesfull"});
     
   } catch (error) {
     return res.status(500).json({message: 'Login Failed', error: error.message})
@@ -42,8 +54,7 @@ export async function signup(req, res) {
   const saltRounds = Number(process.env.SALT_ROUNDS);
 
   try {
-
-    const { username, password } = req.body;
+    const { username, password, name, lastname } = req.body;
 
     if (!username || !password ) {
       throw new Error('Insufficient input data');
@@ -57,8 +68,10 @@ export async function signup(req, res) {
     }
 
     const newUser = new User({
-      username: username,
-      password: hashedPassword
+      username,
+      password: hashedPassword,
+      name,
+      lastname
     })
 
     await newUser.save();

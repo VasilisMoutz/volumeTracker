@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link href="style.css" rel="stylesheet">
-  <link href="output.css" rel="stylesheet">
+  <link href="/static/style.css" rel="stylesheet">
+  <link href="/static/output.css" rel="stylesheet">
 </head>
 <body class="bg-neutral-900 text-white font-mona">
   <div class="flex">
-    <div class="w-80 bg-neutral-800 h-screen">
+    <div class="w-80 bg-neutral-800 h-screen border-r-2 border-primary-200 drop-shadow-md">
       <div 
         class="flex py-10 pl-10 gap-2">
-        <img src="./images/logo.svg">
+        <img src="static/images/logo.svg">
         <h2 class="font-bold text-xl tracking-wider">EffortTrack</h2>
       </div>
-      <nav class="font-medium text-sm pl-7 flex flex-col gap-4 text-general-default">
+      <nav class="font-medium text-sm pl-7 flex flex-col gap-4 text-general-default mr-4">
         <button 
           data="dashboard" 
           active="true"
@@ -100,6 +100,6 @@
     <div id="content">
     </div>
   </div>
-  <script type="module" src="main.js"></script>
+  <script type="module" src="static/main.js"></script>
 </body>
 </html>

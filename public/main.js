@@ -1,6 +1,6 @@
-import { dashboardHtml } from "/modules/dashboard.js";
-import { createProjectHtml } from "/modules/createProject.js";
-import { trackTimeHtml } from "/modules/trackTime.js"
+import { dashboardHtml } from "/static/modules/dashboard.js";
+import { createProjectHtml } from "/static/modules/createProject.js";
+import { trackTimeHtml } from "/static/modules/trackTime.js"
 
 const content = document.getElementById("content");
 const navLinks = document.querySelectorAll("button");
@@ -18,21 +18,18 @@ document.addEventListener("click", async (event) => {
   switch (clickedItem) {
     case 'dashboard':
       event.preventDefault()
-      console.log('dashboard');
       addClickedStyles(event);
       contentHTML = dashboardHtml;
       history.pushState(contentHTML, "", '/');
       break;
     case 'create-project':
       event.preventDefault()
-      console.log('create-project');
       addClickedStyles(event);
       contentHTML = trackTimeHtml;
       history.pushState(contentHTML, "", clickedItem);
       break;
     case 'track-time':
       event.preventDefault()
-      console.log('track-time');
       addClickedStyles(event);
       contentHTML = createProjectHtml;
       history.pushState(contentHTML, "", clickedItem);

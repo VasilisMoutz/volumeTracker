@@ -20,7 +20,6 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
 
     if (response.ok) {
       const result = await response.json();
-      console.log('Success', result);
       window.location.replace(window.location.href = '/');
     } else { 
       console.error('Error:', response.statusText);
