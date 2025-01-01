@@ -1,3 +1,3 @@
 export const trackTimeHtml = `
-  <h1>Track Volume</h1>
+  <h1>TRACK VOLUME</h1>
 `

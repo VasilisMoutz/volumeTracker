@@ -1,3 +1,3 @@
 export const createProjectHtml = `
-  <h1>Create Project HTML</h1>
+  <h1>CREATE PROJECT</h1>
 `

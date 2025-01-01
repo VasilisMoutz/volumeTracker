@@ -9,95 +9,58 @@
 </head>
 <body class="bg-neutral-900 text-white font-mona">
   <div class="flex">
-    <div class="w-80 bg-neutral-800 h-screen border-r-2 border-primary-200 drop-shadow-md">
+    <div class="flex flex-col w-80 bg-neutral-800 h-screen border-r-2 border-primary-200 drop-shadow-md overflow-auto">
       <div 
         class="flex py-10 pl-10 gap-2">
         <img src="static/images/logo.svg">
         <h2 class="font-bold text-xl tracking-wider">EffortTrack</h2>
       </div>
-      <nav class="font-medium text-sm pl-7 flex flex-col gap-4 text-general-default mr-4">
-        <button 
-          data="dashboard" 
-          active="true"
-          class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in pl-4 
-                border-primary-100 border-l-4 bg-primary-200 ml-4">
-          <svg 
-            class="icon w-5 pointer-events-none"
-            viewBox="0 0 15 15" 
-            fill="#aeb9e1" 
-            xmlns="http://www.w3.org/2000/svg">
-            <path 
-              d="M0.0683594 6.83355C0.0683594 6.41283 0.249846 6.01216 0.567115 5.73244L6.07891 
-              0.872996C6.643 0.375668 7.49372 0.375668 8.05781 0.872995L13.5696 5.73244C13.8869 
-              6.01216 14.0684 6.41283 14.0684 6.83355V13.0259C14.0684 13.84 13.4021 14.5 12.5802 
-              14.5H1.55656C0.73465 14.5 0.0683594 13.84 0.0683594 13.0259V6.83355Z"/>
-          </svg>  
-                     
-          <span class="text-lg hover:text-primary-100 pointer-events-none">
-            Dashboard
-          </span>
-        </button>
+      <nav class="flex flex-col justify-between pl-7 flex-auto">
+        <div class="font-medium text-sm text-neutral-100 flex flex-col gap-4 mr-4">
+          <button 
+            id="dashboard-btn"
+            data="dashboard" 
+            active="true"
+            class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in pl-4 
+                  border-primary-100 border-l-4 bg-primary-200 ml-4 text-white hover:text-white">
+            <img class="icon w-5 pointer-events-none" src="static/images/home.svg" alt="test">       
+            <span class="text-lg pointer-events-none ">
+              Dashboard
+            </span>
+          </button>
 
-        <button 
-          data="create-project"
-          class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in pl-4 border-primary-100">
-          <svg 
-            class="icon w-5 pointer-events-none" 
-            viewBox="0 0 14 15" 
-            fill="#aeb9e1"
-            xmlns="http://www.w3.org/2000/svg">
-            <path 
-              d="M6.57784 1.06145C6.76629 0.737899 7.23371 0.737898 7.42216 1.06145L9.41868 
-              4.48926C9.48772 4.60778 9.60339 4.69183 9.73745 4.72086L13.6144 5.56041C13.9804 
-              5.63965 14.1248 6.0842 13.8754 6.36341L11.2323 9.32147C11.1409 9.42375 11.0967 
-              9.55973 11.1105 9.6962L11.5101 13.6429C11.5478 14.0154 11.1697 14.2902 10.827 
-              14.1392L7.19701 12.5395C7.07149 12.4842 6.92851 12.4842 6.80299 12.5395L3.17296 
-              14.1392C2.83032 14.2902 2.45216 14.0154 2.48988 13.6429L2.88948 9.6962C2.9033 
-              9.55973 2.85911 9.42375 2.76772 9.32147L0.12464 6.36341C-0.124841 6.0842 0.0196004 
-              5.63965 0.385551 5.56041L4.26255 4.72086C4.39661 4.69183 4.51228 4.60778 4.58132 
-              4.48926L6.57784 1.06145Z"/>
-          </svg>
-          <span class="text-lg pointer-events-none">
-            Create Project
-          </span>
-        </button>
-        <button 
-          class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in pl-4 border-primary-100"
-          data="track-time">
-          <svg 
-          class="icon w-5 pointer-events-none"
-          viewBox="0 0 14 14" 
-          fill="#aeb9e1"
-          xmlns="http://www.w3.org/2000/svg">
-            <path 
-            d="M3.36257 13.72C3.21408 13.72 3.07168 13.661 2.96668 13.556C2.86169 13.451 2.8027 
-            13.3086 2.8027 13.1601V10.1718C2.49555 10.3184 2.15515 10.3811 1.81594 10.3538C1.52872 
-            10.3327 1.24969 10.2485 0.998699 10.1073C0.747707 9.96612 0.530926 9.77132 0.363785 
-            9.53679C0.196643 9.30227 0.0832509 9.03378 0.0316773 8.75045C-0.0198963 8.46712 
-            -0.00838304 8.1759 0.0653976 7.89752C0.139178 7.61914 0.273412 7.36045 0.458547 
-            7.13985C0.643681 6.91925 0.875164 6.74217 1.13652 6.62122C1.39788 6.50026 1.68268 
-            6.4384 1.97067 6.44004C2.25865 6.44168 2.54274 6.50677 2.8027 6.63069V3.64241C2.8027 
-            3.49393 2.86169 3.35152 2.96668 3.24653C3.07168 3.14153 3.21408 3.08255 3.36257 
-            3.08255H6.63078C6.48426 2.7754 6.42149 2.43499 6.44882 2.09579C6.46992 1.80857 
-            6.55408 1.52954 6.69529 1.27855C6.8365 1.02755 7.0313 0.810772 7.26582 
-            0.643631C7.50035 0.47649 7.76883 0.363097 8.05217 0.311524C8.3355 0.25995 
-            8.62672 0.271463 8.9051 0.345244C9.18347 0.419024 9.44217 0.553259 9.66276 
-            0.738393C9.88336 0.923527 10.0604 1.15501 10.1814 1.41637C10.3024 1.67772 10.3642 
-            1.96253 10.3626 2.25051C10.3609 2.5385 10.2958 2.82258 10.1719 3.08255H13.4401C13.5886 
-            3.08255 13.731 3.14153 13.836 3.24653C13.941 3.35152 14 3.49393 14 3.64241V6.63069C13.6929 
-            6.48417 13.3524 6.4214 13.0132 6.44874C12.726 6.46984 12.447 6.55399 12.196 
-            6.6952C11.945 6.83641 11.7282 7.03121 11.5611 7.26574C11.3939 7.50026 11.2805 
-            7.76875 11.229 8.05208C11.1774 8.33541 11.1889 8.62663 11.2627 8.90501C11.3365 
-            9.18339 11.4707 9.44208 11.6558 9.66268C11.841 9.88328 12.0725 10.0604 12.3338 
-            10.1813C12.5952 10.3023 12.88 10.3641 13.168 10.3625C13.456 10.3609 13.74 10.2958 
-            14 10.1718V13.1601C14 13.3086 13.941 13.451 13.836 13.556C13.731 13.661 13.5886 
-            13.72 13.4401 13.72H3.36257Z"/>
-          </svg>               
-          <span class="text-lg pointer-events-none">Track Volume</span>
-        </button>
+          <button 
+            data="create-project"
+            class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in pl-4 border-primary-100 hover:text-white">
+            <img class="icon w-5 pointer-events-none" src="static/images/star.svg" alt="star icon">
+            <span class="text-lg pointer-events-none">
+              Create Project
+            </span>
+          </button>
+          <button 
+            class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in pl-4 border-primary-100 hover:text-white"
+            data="track-time">
+            <img class="icon w-5 pointer-events-none" src="static/images/puzzle.svg" alt="puzzle icon">    
+            <span class="text-lg pointer-events-none">Track Volume</span>
+          </button>
+        </div>
+        <div class="flex flex-col gap-4 pl-4 mb-14">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+              <span id="NameFirstLatter"></span>
+            </div>
+            <p 
+              class="text-neutral-100 text-lg"
+              id="FullName"></p>
+          </div>
+          <button class="flex gap-2 text-neutral-100 w-fit">
+            <img class="icon fill-neutral-100 w-8" src="static/images/logout.svg" alt="logout icon">
+            <span class="text-neutral-100 text-lg hover:text-white transition">Logout</span>
+          </button>
+        </div>
       </nav>
     </div>
-    <div id="content">
+    <div id="content" class="h-screen">
     </div>
   </div>
   <script type="module" src="static/main.js"></script>

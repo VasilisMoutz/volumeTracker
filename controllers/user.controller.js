@@ -5,48 +5,47 @@ import jsonwebtoken from 'jsonwebtoken'
 export async function login(req, res) {
 
     try {
-    const {username, password} = req.body;
+      const {username, password} = req.body;
 
-    if (!username || !password ) {
-      throw new Error('Insufficient input data');
-    }
+      if (!username || !password ) {
+        throw new Error('Insufficient input data');
+      }
 
-    const user = await User.findOne({username});
+      const user = await User.findOne({username});
 
-    if (!user) {
-      throw new Error('User is not yet registered');
-    }
+      if (!user) {
+        throw new Error('User is not yet registered');
+      }
 
-    const match = await bcrypt.compare(password, user.password);
+      const match = await bcrypt.compare(password, user.password);
 
-    if (!match) {
-      throw new Error('Invalid Credentials');
-    }
+      if (!match) {
+        throw new Error('Invalid Credentials');
+      }
 
-    const token = await jsonwebtoken.sign({username}, process.env.JWT_SECRET, { expiresIn: '1h' })
+      const token = await jsonwebtoken.sign({username}, process.env.JWT_SECRET, { expiresIn: '1h' })
 
-    const userDetails = {
-      firstname: user.name,
-      lastname: user.lastname
-    };
+      const userDetails = {
+        firstname: user.name,
+        lastname: user.lastname
+      };
 
-    res.cookie('authToken', token, {
-      httpOnly: true,
-      sameSite: 'Strict',
-      maxAge: 24 * 60 * 60 * 1000
-    });
+      res.cookie('authToken', token, {
+        httpOnly: true,
+        sameSite: 'Strict',
+        maxAge: 24 * 60 * 60 * 1000
+      });
+      
+      res.cookie('userDetails', JSON.stringify(userDetails), {
+        sameSite: 'Strict',
+        maxAge: 24 * 60 * 60 * 1000
+      });
+
+      res.status(200).json({message: "Login Succesfull"});
     
-    res.cookie('userDetails', JSON.stringify(userDetails), {
-      httpOnly: true,
-      sameSite: 'Strict',
-      maxAge: 24 * 60 * 60 * 1000
-    });
-
-    res.status(200).json({message: "Login Succesfull"});
-    
-  } catch (error) {
-    return res.status(500).json({message: 'Login Failed', error: error.message})
-  }
+    } catch (error) {
+      return res.status(500).json({message: 'Login Failed', error: error.message})
+    }
 }
 
 export async function signup(req, res) {
@@ -83,3 +82,18 @@ export async function signup(req, res) {
 
   return res.status(200).json({message: 'Registration complete'});
 }
+
+export async function logout(req, res) {
+
+  try {
+    res.cookie('authToken', '', {
+      httpOnly: true,
+      sameSite: 'Strict'
+    });
+  
+    return res.status(200).json({message: "Logout Succesfull"});
+  } catch (err) {
+    res.status(400).json({message: "Logout Failed", err})
+  }
+  
+} 
