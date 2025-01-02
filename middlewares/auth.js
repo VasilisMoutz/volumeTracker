@@ -12,7 +12,7 @@ export function auth(req, res, next) {
 
   jsonwebtoken.verify(token, process.env.JWT_SECRET, (err) => {
     if(err){
-        console.log('ERROR: Could not connect to the protected route');
+        console.log('ERROR: Could not connect to the protected route', err);
         return res.redirect('/auth/login')
     } else {
         console.log('SUCCESS: Connected to protected route');

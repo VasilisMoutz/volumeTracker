@@ -28,20 +28,7 @@
 }
 
 
-/* @font-face {
-  font-family: PoppinsThin;
-  src: url(fonts/Poppins-Thin.ttf);
+#searchBar {
+  background: url('images/search.svg') no-repeat scroll 12px 12px;
+  padding-left: 40px;
 }
-
-@font-face {
-  font-family: PoppinsBold;
-  src: url(fonts/Poppins-Bold.ttf);
-} */
-
-/* 
-body {
-  font-family: Poppins;
-  color: aliceblue;
-  margin: 0;
-  letter-spacing: 1px;
-} */
