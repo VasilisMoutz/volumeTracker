@@ -24,14 +24,55 @@ const header = `
   </div>
 `
 
-export const dashboardJs = function() {
+const main = `
+  <div 
+    class="flex flex-wrap gap-4 justify-center"
+    id="projects-container">
+  </div>
+`
 
+export const dashboardJs = async function() {
   const timePeriods = document.getElementById('timePeriods');
   const periodsBtn = document.getElementById('periodsBtn');
+  const projects = await getProjects();
+  const mainContainer = document.getElementById('projects-container');
+
+  for(const project of projects) {
+    let projectCard = `
+      <div class="w-[320px]">
+        <div>
+          <img 
+            class="object-cover h-56 w-full rounded-tl-2xl rounded-tr-2xl"
+            src="${project.image}" 
+            alt="${project.name} image">
+        </div>
+        <div 
+          class="h-56 w-full rounded-tl-2xl rounded-tr-2xl 
+          relative bottom-5 bg-secondary-100 block">
+          <div class="pt-10 px-5">
+            <h3>${project.name}<h3>
+          </div>
+        <div>
+      </div>
+    `
+    mainContainer.innerHTML += projectCard;
+  }
 
   periodsBtn.addEventListener('click', () => {
       timePeriods.classList.toggle('hidden');
     })
+
+  async function getProjects() {
+    try {
+      const response = await fetch('/api/project/get', {method: 'GET'});
+      if (response.ok) {
+        const result = await response.json();
+        return result;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  } 
 };
 
-export const dashboardHtml = header;
+export const dashboardHtml = header + main;

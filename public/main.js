@@ -2,6 +2,8 @@ import { dashboardHtml } from "/static/modules/dashboard.js";
 import { createProjectHtml } from "/static/modules/createProject.js";
 import { trackTimeHtml } from "/static/modules/trackTime.js"
 import { dashboardJs } from "./modules/dashboard.js";
+import { createProjectJs } from "./modules/createProject.js";
+import { trackJs } from "./modules/trackTime.js";
 
 const content = document.getElementById("content");
 const navLinks = document.querySelectorAll("button");
@@ -11,7 +13,7 @@ const initialState = content.innerHTML;
 const buttons = document.querySelectorAll('button');
 const dashboardBtn = document.getElementById('dashboard-btn');
 let contentHTML;
-const pages = ['CREATE PROJECT', 'DASHBOARD', 'TRACK VOLUME']
+const pages = ['Create New Project', 'TRACK VOLUME']
 
 initialLoad();
 
@@ -24,10 +26,12 @@ buttons.forEach(button => {
         dashboardJs();
         break;
       case 'create-project':
-        handleNavClick(event, trackTimeHtml,  buttonType);
+        handleNavClick(event, createProjectHtml,  buttonType);
+        createProjectJs();
         break;
       case 'track-time':
-        handleNavClick(event, createProjectHtml,  buttonType);
+        handleNavClick(event, trackTimeHtml,  buttonType);
+        trackJs();
         break;
     }
   })
@@ -37,6 +41,7 @@ buttons.forEach(button => {
 window.addEventListener("popstate", (event) => {
   if (event.state) {
     contentHTML = event.state;
+    console.log(event.state)
     if (contentHTML) {
       pages.forEach(page => {
         if (contentHTML.includes(page)) {

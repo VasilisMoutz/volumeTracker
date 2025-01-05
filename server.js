@@ -5,12 +5,11 @@ import dotenv from 'dotenv';
 import { auth } from './middlewares/auth.js';
 import cookieParser from 'cookie-parser';
 
-// routing imports
 import generic from './routes/generic.route.js';
 import users from './routes/user.route.js'
+import projects from './routes/project.route.js'
 import staticFiles from './routes/static.route.js'
 
-dotenv.config();
 const app = express();
 const uri = process.env.DB_URI;
 
@@ -24,14 +23,12 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
-//Load files && prevent user from direct url access to them.
-app.use('/static', staticFiles);
+app.use('/api', projects);
 
-// Only access authentication routes if not logged in
+app.use('/static', staticFiles);
 app.use('/auth/login', express.static('public/auth'));
 app.use('/api', users);
 
-// Authenticated users can access the rest of the page
 app.use(generic);
 
 

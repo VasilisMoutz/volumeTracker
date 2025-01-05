@@ -23,7 +23,7 @@ export async function login(req, res) {
         throw new Error('Invalid Credentials');
       }
 
-      const token = await jsonwebtoken.sign({username}, process.env.JWT_SECRET, { expiresIn: '1h' })
+      const token = await jsonwebtoken.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '1h' })
 
       const userDetails = {
         firstname: user.name,
