@@ -23,7 +23,7 @@ export async function login(req, res) {
         throw new Error('Invalid Credentials');
       }
 
-      const token = await jsonwebtoken.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '1h' })
+      const token = await jsonwebtoken.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '1d' })
 
       const userDetails = {
         firstname: user.name,
@@ -84,16 +84,7 @@ export async function signup(req, res) {
 }
 
 export async function logout(req, res) {
-
-  try {
-    res.cookie('authToken', '', {
-      httpOnly: true,
-      sameSite: 'Strict'
-    });
-  
-    return res.status(200).json({message: "Logout Succesfull"});
-  } catch (err) {
-    res.status(400).json({message: "Logout Failed", err})
-  }
-  
+  res.clearCookie("userDetails");
+  res.clearCookie("authToken");
+  res.end()
 } 

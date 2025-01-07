@@ -4,6 +4,7 @@ import { trackTimeHtml } from "/static/modules/trackTime.js"
 import { dashboardJs } from "./modules/dashboard.js";
 import { createProjectJs } from "./modules/createProject.js";
 import { trackJs } from "./modules/trackTime.js";
+import { getProjectTrackingHtml, projectTrackingJS } from "./modules/projectTracking.js";
 
 const content = document.getElementById("content");
 const navLinks = document.querySelectorAll("button");
@@ -17,6 +18,12 @@ const pages = ['Create New Project', 'TRACK VOLUME']
 
 initialLoad();
 
+document.addEventListener('card-clicked', (event) => {
+  loadProjectTracking(event.detail)
+});
+
+
+// Add event listeners to the nav buttons
 buttons.forEach(button => {
   button.addEventListener("click", async (event) => {
     const buttonType = event.target.getAttribute("data");
@@ -41,7 +48,6 @@ buttons.forEach(button => {
 window.addEventListener("popstate", (event) => {
   if (event.state) {
     contentHTML = event.state;
-    console.log(event.state)
     if (contentHTML) {
       pages.forEach(page => {
         if (contentHTML.includes(page)) {
@@ -98,5 +104,11 @@ function initialLoad() {
   account.innerHTML = userDetails.firstname[0];
   content.innerHTML = dashboardHtml;
   dashboardJs();
+}
+
+function loadProjectTracking(data) {
+  // Generate the html and load it
+  content.innerHTML = getProjectTrackingHtml(data)
+  projectTrackingJS(data);
 }
 

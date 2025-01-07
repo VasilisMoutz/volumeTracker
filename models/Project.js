@@ -5,6 +5,11 @@ const projectSchema = new Schema(
   {
     name:{ type: String, required: true },
     image: String,
+    volumeType: {
+      type: String,
+      enum: ['duration', 'frequency'], 
+      required: true
+    },
     dailyVol: { type: Number, default: 0 },
     weeklyVol: { type: Number, default: 0 },
     monthlyVol: { type: Number, default: 0 },

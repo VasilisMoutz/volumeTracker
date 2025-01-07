@@ -5,7 +5,7 @@ import { auth } from '../middlewares/auth.js';
 const router = express.Router();
 const __dirname = path.resolve();
 
-router.get('/', auth, function(req,res) {
+router.get('/', auth, function( req, res ) {
   res.sendFile(path.join(__dirname, '/public', 'index.html'));
 });
 

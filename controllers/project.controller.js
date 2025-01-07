@@ -6,7 +6,6 @@ import jsonwebtoken from 'jsonwebtoken'
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client,PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import User from "../models/User.js";
-import { validate } from "node-cron";
 
 dotenv.config();
 
@@ -25,6 +24,26 @@ const s3 = new S3Client({
   },
   region: bucketRegion
 });
+
+export async function ProjectUpdate(req, res) {
+  const { projectId, volume } = req.body;
+  try {
+    await Project.updateOne(
+      { _id: projectId },
+      { $inc: {
+        dailyVol: volume,
+        weeklyVol: volume,
+        monthlyVol: volume,
+        yearlyVol: volume,
+        totalVol: volume
+      }}
+    )
+  } catch (err) {
+    console.log(err);
+  }
+
+  res.send({});
+}
 
 export async function ProjectsGet(req, res) {
   const token = req.cookies["authToken"];
@@ -52,9 +71,11 @@ export async function ProjectsGet(req, res) {
     // Get onlt the neccessart info for the client
     projects.push(
       {
+        id: project._id,
         name: project.name,
         image: url,
-        dailyVol: project. dailyVol,
+        type: project.volumeType,
+        dailyVol: project.dailyVol,
         weeklyVol: project.weeklyVol,
         monthlyVol: project.monthlyVol,
         yearlyVol: project.yearlyVol,
@@ -93,6 +114,7 @@ export async function ProjectCreate(req, res) {
 
   const newProject = new Project({
     name: req.body.projectName,
+    volumeType: req.body.projectType,
     image: imageName,
     owner: userID
   })

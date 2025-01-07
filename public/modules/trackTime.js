@@ -26,7 +26,7 @@ const header = `
 
 const main = `
   <div 
-    class="flex flex-wrap gap-4 justify-center"
+    class="flex flex-wrap gap-4 p-10"
     id="projects-container">
   </div>
 `
@@ -37,17 +37,21 @@ export const trackJs = async function() {
   const projects = await getProjects();
   const mainContainer = document.getElementById('projects-container');
 
-  for(const project of projects) {
+  // Creating the cards
+  for (const project of projects) {
     let projectCard = `
-      <div class="w-[320px]">
-        <div>
+      <div
+        data-id="${project.id}"
+        class="card w-[320px] cursor-pointer group">
+        <div class="w-full overflow-hidden rounded-tl-2xl rounded-tr-2xl">
           <img 
-            class="object-cover h-56 w-full rounded-tl-2xl rounded-tr-2xl"
+            class="object-cover h-56 w-full 
+            transition duration-300 group-hover:scale-110"
             src="${project.image}" 
             alt="${project.name} image">
         </div>
         <div 
-          class="h-40 w-full rounded-2xl bg-white text-primary-200
+          class="h-32 w-full rounded-2xl bg-white text-primary-200
           relative bottom-5 flex items-center justify-center">
             <h3 class="text-2xl">${project.name}<h3>
         <div>
@@ -56,13 +60,10 @@ export const trackJs = async function() {
     mainContainer.innerHTML += projectCard;
   }
 
-  periodsBtn.addEventListener('click', () => {
-      timePeriods.classList.toggle('hidden');
-    })
-
+  // Fetch all projects
   async function getProjects() {
     try {
-      const response = await fetch('/api/project/get', {method: 'GET'});
+      const response = await fetch('/api/projects/get', {method: 'GET'});
       if (response.ok) {
         const result = await response.json();
         return result;
@@ -71,6 +72,25 @@ export const trackJs = async function() {
       console.log(err);
     }
   } 
+  // Add event listener to all cards
+  const cards = document.getElementsByClassName('card');
+  for (const card of cards) {
+    const projectId = card.getAttribute('data-id');
+    const projectData = projects.find((project) => project.id === projectId)
+    card.addEventListener('click', () => {
+      const event = new CustomEvent("card-clicked", {detail: projectData})
+      document.dispatchEvent(event);
+    })
+    
+  }
+
+  // Sorting Button
+  periodsBtn.addEventListener('click', () => {
+      timePeriods.classList.toggle('hidden');
+  })
+
 };
 
 export const trackTimeHtml = header + main;
+
+export const projectHtml = ''

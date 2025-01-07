@@ -64,7 +64,7 @@ export const dashboardJs = async function() {
 
   async function getProjects() {
     try {
-      const response = await fetch('/api/project/get', {method: 'GET'});
+      const response = await fetch('/api/projects/get', {method: 'GET'});
       if (response.ok) {
         const result = await response.json();
         return result;
@@ -76,3 +76,4 @@ export const dashboardJs = async function() {
 };
 
 export const dashboardHtml = header + main;
+

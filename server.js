@@ -28,7 +28,6 @@ app.use('/api', projects);
 app.use('/static', staticFiles);
 app.use('/auth/login', express.static('public/auth'));
 app.use('/api', users);
-
 app.use(generic);
 
 
