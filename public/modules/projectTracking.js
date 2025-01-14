@@ -16,6 +16,15 @@ const frequencyCounter = `
       </div>
     `;
 
+const durationCounter = `
+      <input 
+        id="timerInput"
+        class="font-mono bg-transparent text-3xl w-[160px] 
+              text-right caret-white outline-none p-2"
+        inputmode="numeric" 
+        placeholder="00:00:00">
+`
+
 function generateHtml(data) {
   const type = data.type == 'duration' ? 'hours' : 'sessions';
   let counterHtml;
@@ -24,6 +33,11 @@ function generateHtml(data) {
   if (type === 'sessions') {
     counterHtml = frequencyCounter;
     buttonText = 'Add Sessions';
+  }
+
+  if (type === 'hours') {
+    counterHtml = durationCounter;
+    buttonText = 'Add duration';
   }
 
   return `
@@ -59,25 +73,80 @@ export const getProjectTrackingHtml = function(data){
 }
 
 export const projectTrackingJS = function(data) { 
-  const countDom = document.getElementById('count');
   const submitBtn = document.getElementById('submitVolume');
-  let count = 0;
-  countDom.innerHTML = count;
- 
+  let volume;
+
   if (data.type == 'frequency') {
+    const countDom = document.getElementById('count');
     const increaseBtn = document.getElementById('increase');
-    const decreaseBtn = document.getElementById('decrease');    
+    const decreaseBtn = document.getElementById('decrease');   
+
+    volume = 0;
+    countDom.innerHTML = volume; 
   
     increaseBtn.addEventListener('click', () => {
-      count++;
-      countDom.innerHTML = count;
+      volume++;
+      countDom.innerHTML = volume;
     })
 
     decreaseBtn.addEventListener('click', () => {
-      count--;
-      count = count < 0 ? 0 : count;
-      countDom.innerHTML = count;
+      volume--;
+      volume = volume < 0 ? 0 : volume;
+      countDom.innerHTML = volume;
     })
+  }
+
+
+  if (data.type == 'duration') {
+    const timerInput = document.getElementById('timerInput');
+    let seconds;
+    let minutes;
+    let hours;
+    let secondsDigit1 = '0';
+    let secondsDigit2 = '0';
+    let minutesDigit1 = '0';
+    let minutesDigit2 = '0';
+    let hoursDigit1 = '0';
+    let hoursDigit2 = '0';
+
+    timerInput.addEventListener('keydown', (event) => {
+      event.preventDefault()
+
+      if (event.key === 'Backspace') {
+        removeInput();
+      } else if (Number.isNaN(Number.parseInt(event.key))) {
+        return;
+      } else {
+        addInput()
+      }
+
+      hours = hoursDigit2 + hoursDigit1;
+      minutes = minutesDigit2 +  minutesDigit1;
+      seconds = secondsDigit2 + secondsDigit1;
+
+      let volume = `${hours}:${minutes}:${seconds}`;
+
+      timerInput.value = volume;
+      
+      function removeInput() {
+        secondsDigit1 = secondsDigit2;
+        secondsDigit2 = minutesDigit1;
+        minutesDigit1 = minutesDigit2;
+        minutesDigit2 = hoursDigit1;
+        hoursDigit1 = hoursDigit2;
+        hoursDigit2 = '0';
+      }
+
+      function addInput() {
+        hoursDigit2 = hoursDigit1;
+        hoursDigit1 =  minutesDigit2;
+        minutesDigit2 = minutesDigit1;
+        minutesDigit1 = secondsDigit2;
+        secondsDigit2 = secondsDigit1
+        secondsDigit1 = event.key;
+      }
+    })
+    
   }
 
   submitBtn.addEventListener('click', async () => {
@@ -89,7 +158,7 @@ export const projectTrackingJS = function(data) {
         },
         body: JSON.stringify({
           projectId: data.id,
-          volume: count
+          volume: volume
         })
       })
     } catch (err) {

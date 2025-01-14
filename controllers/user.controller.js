@@ -79,12 +79,11 @@ export async function signup(req, res) {
     res.status(500).json({message: 'Registration Failed', error: error.message});
     return;
   }
-
   return res.status(200).json({message: 'Registration complete'});
 }
 
 export async function logout(req, res) {
   res.clearCookie("userDetails");
   res.clearCookie("authToken");
-  res.end()
+  return res.redirect('/auth/login');
 } 
