@@ -1,7 +1,6 @@
 import Project from "../models/Project.js";
 import dotenv from 'dotenv';
 import crypto from 'crypto';
-import sharp from "sharp";
 import jsonwebtoken from 'jsonwebtoken'
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client,PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
@@ -27,15 +26,28 @@ const s3 = new S3Client({
 
 export async function ProjectUpdate(req, res) {
   const { projectId, volume } = req.body;
+
+  let volumeToUpdate;
+
+  if (typeof volume === 'string'){
+    const volumeTime = volume.split(':');
+    const hours = parseInt(volumeTime[0]);
+    const minutes = parseInt(volumeTime[1]);
+    const seconds = parseInt(volumeTime[2]);
+    volumeToUpdate = hours * 3600 + minutes * 60 + seconds;
+  } else {
+    volumeToUpdate = volume;
+  }
+
   try {
     await Project.updateOne(
       { _id: projectId },
       { $inc: {
-        dailyVol: volume,
-        weeklyVol: volume,
-        monthlyVol: volume,
-        yearlyVol: volume,
-        totalVol: volume
+        dailyVol: volumeToUpdate,
+        weeklyVol: volumeToUpdate,
+        monthlyVol: volumeToUpdate,
+        yearlyVol: volumeToUpdate,
+        totalVol: volumeToUpdate
       }}
     )
   } catch (err) {
@@ -75,11 +87,13 @@ export async function ProjectsGet(req, res) {
         name: project.name,
         image: url,
         type: project.volumeType,
-        dailyVol: project.dailyVol,
-        weeklyVol: project.weeklyVol,
-        monthlyVol: project.monthlyVol,
-        yearlyVol: project.yearlyVol,
-        totalVol: project.totalVol,
+        volume : {
+          daily: project.dailyVol,
+          weekly: project.weeklyVol,
+          monthly: project.monthlyVol,
+          yearly: project.yearlyVol,
+          total: project.totalVol,
+        }
       }
     )
   }

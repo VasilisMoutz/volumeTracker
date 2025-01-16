@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'mona': ['Mona Sans']
+        'mona': ['Mona Sans'],
       },
       fontWeight: {
         thin: '100',
@@ -31,6 +31,22 @@ export default {
           900: '#091029'
         },
       },
+      dropShadow: {
+        glow: [
+          "0 0 2px #fff",
+          "0 0 3px #fff",
+          "0 0 8px #bc13fe",
+          "0 0 12px #bc13fe",
+          "0 0 16px #bc13fe",
+        ],
+        whiteGlow: [
+          "0 0 2px #fff",
+          "0 0 3px #fff",
+          "0 0 8px #00c2ff",
+          "0 0 12px #00c2ff",
+          "0 0 16px #00c2ff",
+        ]
+      }
     },
   },
   plugins: [],

@@ -1,3 +1,5 @@
+import secondsConverter from "./secondsConverter.js";
+
 const frequencyCounter = `
       <div class="flex items-center text-6xl mt-5">
         <button 
@@ -26,18 +28,23 @@ const durationCounter = `
 `
 
 function generateHtml(data) {
+
   const type = data.type == 'duration' ? 'hours' : 'sessions';
   let counterHtml;
   let buttonText;
+  let volume;
   
   if (type === 'sessions') {
     counterHtml = frequencyCounter;
     buttonText = 'Add Sessions';
+    volume = data.volume.total;
   }
 
   if (type === 'hours') {
     counterHtml = durationCounter;
     buttonText = 'Add duration';
+    volume = secondsConverter(data.volume.total);
+    volume = volume.hours;
   }
 
   return `
@@ -48,7 +55,7 @@ function generateHtml(data) {
       </header>
       <div class="absolute top-0 pt-10 pl-10">
         <h1 class="text-5xl font-bold">${data.name}</h1>
-        <p class="text-lg">Total ${data.totalVol} ${type} Tracked</p>
+        <p class="text-lg">Total ${volume} ${type} Tracked</p>
       </div>
     </div>
     <div>
@@ -124,7 +131,7 @@ export const projectTrackingJS = function(data) {
       minutes = minutesDigit2 +  minutesDigit1;
       seconds = secondsDigit2 + secondsDigit1;
 
-      let volume = `${hours}:${minutes}:${seconds}`;
+      volume = `${hours}:${minutes}:${seconds}`;
 
       timerInput.value = volume;
       
