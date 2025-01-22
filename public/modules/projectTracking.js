@@ -1,4 +1,4 @@
-import secondsConverter from "./secondsConverter.js";
+import { secondsConverter } from "./converters.js";
 
 const frequencyCounter = `
       <div class="flex items-center text-6xl mt-5">
@@ -76,7 +76,7 @@ function generateHtml(data) {
 }
 
 export const getProjectTrackingHtml = function(data){
-  return generateHtml(data)
+  return generateHtml(data);
 }
 
 export const projectTrackingJS = function(data) { 
@@ -164,6 +164,7 @@ export const projectTrackingJS = function(data) {
           'Content-Type': 'application/json', 
         },
         body: JSON.stringify({
+          userId: data.user,
           projectId: data.id,
           volume: volume
         })

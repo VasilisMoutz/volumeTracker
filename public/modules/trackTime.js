@@ -35,6 +35,7 @@ export const trackJs = async function() {
   const timePeriods = document.getElementById('timePeriods');
   const periodsBtn = document.getElementById('periodsBtn');
   const projects = await getProjects();
+  console.log(projects)
   const mainContainer = document.getElementById('projects-container');
 
   // Creating the cards
@@ -81,7 +82,6 @@ export const trackJs = async function() {
       const event = new CustomEvent("card-clicked", {detail: projectData})
       document.dispatchEvent(event);
     })
-    
   }
 
   // Sorting Button

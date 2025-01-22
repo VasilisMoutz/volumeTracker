@@ -4,7 +4,10 @@ import { logout } from '../controllers/user.controller.js';
 export async function auth(req, res, next) {
   const token = req.cookies["authToken"];
 
-  if (!token && req.originalUrl !== '/auth/signup') {
+  const authRoute = req.originalUrl === '/auth/signup' || 
+                    req.originalUrl === '/auth/login'
+
+  if (!token && !authRoute) {
     return res.redirect('/auth/login');
   }
 

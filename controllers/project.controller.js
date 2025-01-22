@@ -1,4 +1,3 @@
-import Project from "../models/Project.js";
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import jsonwebtoken from 'jsonwebtoken'
@@ -7,7 +6,6 @@ import { S3Client,PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"
 import User from "../models/User.js";
 
 dotenv.config();
-
 const randomImageName = (bytes = 32) => crypto.randomBytes(16).toString('hex');
 
 const bucketName =  process.env.BUCKET_NAME
@@ -25,10 +23,12 @@ const s3 = new S3Client({
 });
 
 export async function ProjectUpdate(req, res) {
-  const { projectId, volume } = req.body;
-
+  const { projectId, volume, userId } = req.body;
+  const date = new Date();
+  const month = date.getMonth();
   let volumeToUpdate;
 
+  // if volume is durational
   if (typeof volume === 'string'){
     const volumeTime = volume.split(':');
     const hours = parseInt(volumeTime[0]);
@@ -40,20 +40,28 @@ export async function ProjectUpdate(req, res) {
   }
 
   try {
-    await Project.updateOne(
-      { _id: projectId },
-      { $inc: {
-        dailyVol: volumeToUpdate,
-        weeklyVol: volumeToUpdate,
-        monthlyVol: volumeToUpdate,
-        yearlyVol: volumeToUpdate,
-        totalVol: volumeToUpdate
-      }}
+    await User.updateOne(
+      { _id: userId },
+      { 
+        $inc: {
+          'projects.$[project].generalVolume.daily': volumeToUpdate,
+          'projects.$[project].generalVolume.weekly': volumeToUpdate,
+          'projects.$[project].generalVolume.monthly': volumeToUpdate,
+          'projects.$[project].generalVolume.yearly': volumeToUpdate,
+          'projects.$[project].generalVolume.total': volumeToUpdate,
+          [`projects.$[project].dateVolume.$[dateVolume].${month}`]: volumeToUpdate
+        }
+      }, 
+      {
+        arrayFilters: [
+          { "project._id": projectId },
+          { "dateVolume.year": 2025 } // TODO dynamicaly get the year
+        ]
+      }
     )
   } catch (err) {
     console.log(err);
   }
-
   res.send({});
 }
 
@@ -61,13 +69,14 @@ export async function ProjectsGet(req, res) {
   const token = req.cookies["authToken"];
   const payload = jsonwebtoken.verify(token, jwt_secret);
   const { userID } = payload
+
+  const validUser = await User.findById(userID);
   
-  if (!userID) {
-    res.status(400).json({message: 'Unauthenticated'})
+  if (!validUser) {
+    return res.status(400).json({message: 'User Not Found'});
   }
 
-  const projectsDB = await Project.find({owner: userID})
-
+  const projectsDB = validUser.projects;
   const projects = []
 
   for (const project of projectsDB) {
@@ -83,37 +92,39 @@ export async function ProjectsGet(req, res) {
     // Get onlt the neccessart info for the client
     projects.push(
       {
+        user: validUser._id,
         id: project._id,
         name: project.name,
         image: url,
         type: project.volumeType,
-        volume : {
-          daily: project.dailyVol,
-          weekly: project.weeklyVol,
-          monthly: project.monthlyVol,
-          yearly: project.yearlyVol,
-          total: project.totalVol,
-        }
+        volume: {
+          daily: project.generalVolume.daily,
+          weekly: project.generalVolume.weekly,
+          monthly: project.generalVolume.monthly,
+          yearly: project.generalVolume.yearly,
+          total: project.generalVolume.total,
+        },
+        dateVolume: project.dateVolume
       }
     )
   }
   res.send(projects)
 }
 
-
 export async function ProjectCreate(req, res) {
 
+  // User specific update
   const token = req.cookies["authToken"];
   const payload = jsonwebtoken.verify(token, jwt_secret);
   const { userID } = payload;
 
-  const validateUser = await User.findById(userID);
+  const validUser = await User.findById(userID);
 
-  if (!validateUser) {
+  if (!validUser) {
     return res.status(400).json({message: 'User Not Found'});
   }
 
-  // const buffer = await sharp(req.file.buffer).resize({height: 1080, width: 1920, fit: "contain"}).toBuffer()
+  // Save Image to AWS
   const imageName = randomImageName();
 
   const params = {
@@ -126,14 +137,20 @@ export async function ProjectCreate(req, res) {
   const command = new PutObjectCommand(params)
   await s3.send(command)
 
-  const newProject = new Project({
+  // Create the object data
+  const date = new Date();
+  const thisYear = date.getFullYear();
+  const dateVol = { year: thisYear }
+
+  const newProject = {
     name: req.body.projectName,
     volumeType: req.body.projectType,
     image: imageName,
-    owner: userID
-  })
+    dateVolume: dateVol
+  }
 
-  await newProject.save();
+  validUser.projects.push(newProject);
+  await validUser.save();
 
   res.status(newProject);
 }

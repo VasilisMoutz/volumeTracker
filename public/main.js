@@ -1,10 +1,8 @@
-import { dashboardHtml } from "/static/modules/dashboard.js";
-import { createProjectHtml } from "/static/modules/createProject.js";
-import { trackTimeHtml } from "/static/modules/trackTime.js"
-import { dashboardJs } from "./modules/dashboard.js";
-import { createProjectJs } from "./modules/createProject.js";
-import { trackJs } from "./modules/trackTime.js";
+import { dashboardHtml, dashboardJs } from "/static/modules/dashboard.js";
+import { createProjectHtml, createProjectJs } from "/static/modules/createProject.js";
+import { trackTimeHtml, trackJs } from "/static/modules/trackTime.js"
 import { getProjectTrackingHtml, projectTrackingJS } from "./modules/projectTracking.js";
+import { mainDashboardHtml, mainDashboardJs } from "./modules/mainDashboard.js";
 
 const content = document.getElementById("content");
 const navLinks = document.querySelectorAll("button");
@@ -29,8 +27,8 @@ buttons.forEach(button => {
     const buttonType = event.target.getAttribute("data");
     switch (buttonType) {
       case 'dashboard':
-        handleNavClick(event, dashboardHtml, '/');
-        dashboardJs();
+        handleNavClick(event, mainDashboardHtml, '/');
+        mainDashboardJs();
         break;
       case 'create-project':
         handleNavClick(event, createProjectHtml,  buttonType);
@@ -102,8 +100,8 @@ function initialLoad() {
 
   fullName.innerHTML = userDetails.firstname + ' ' + userDetails.lastname;
   account.innerHTML = userDetails.firstname[0];
-  content.innerHTML = dashboardHtml;
-  dashboardJs();
+  content.innerHTML = mainDashboardHtml;
+  mainDashboardJs();
 }
 
 function loadProjectTracking(data) {

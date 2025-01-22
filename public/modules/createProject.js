@@ -56,7 +56,7 @@ export const createProjectHtml = `
               </div>
             </fieldset>
           </div>
-          <div class="h-[1px] w-full bg-secondary-400"></div>
+        
             <div class="py-10 flex justify-between">
               <div class="flex items-center gap-2">
                 <img class="w-5" src="static/images/img.svg" alt="Photo icon">

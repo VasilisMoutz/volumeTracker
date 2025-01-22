@@ -1,4 +1,4 @@
-import secondsConverter from "./secondsConverter.js";
+import { secondsConverter } from "./converters.js";
 
 const header = `
   <div class="flex items-center p-10 justify-between flex-auto gap-4">
@@ -54,10 +54,6 @@ const main = `
   </div>
 `
 
-const volume = `
-  
-`
-
 export const dashboardJs = async function() {
   const projects = await getProjects();
   const mainContainer = document.getElementById('projects-container');
@@ -100,7 +96,7 @@ export const dashboardJs = async function() {
 
   function updateChunk(chunk) {
       mainContainer.innerHTML = ''
-      let projectsToDisplay = findProjects(chunk);
+      let projectsToDisplay = projects ? findProjects(chunk) : '';
       for (const project of projectsToDisplay) {
         let projectCard = `
             <div class="w-[420px] h-96 relative">
@@ -166,6 +162,7 @@ export const dashboardJs = async function() {
       const response = await fetch('/api/projects/get', {method: 'GET'});
       if (response.ok) {
         const result = await response.json();
+        console.log(result);
         return result;
       }
     } catch (err) {
