@@ -5,6 +5,18 @@ import { monthsConverter } from "./converters.js";
 export const mainDashboardHtml = `
   <div class="flex mt-20 ml-10">
     <div class="bg-secondary-100 rounded-2xl">
+      <div class="pl-[50px] pt-[30px]">
+        <div class="flex items-center gap-[6px] text-neutral-200">
+          <span>
+            <img 
+              class="icon w-4" 
+              src="static/images/clock.svg" 
+              alt="puzzle icon">
+          </span>
+          <p>Total volume over time</p>
+        </div>
+        <p id="totalVolume" class="text-2xl pt-[10px]"></p>
+      </div>
       <div id="chart" class="flex"></div>
     </div>
     <div class="flex justify-center items-center mt-10 hidden">
@@ -21,10 +33,37 @@ export const mainDashboardHtml = `
 `
 export const mainDashboardJs = async function () {
 
+  // TODO : CREATE THE SELECTION BUTTON FOR YEARS IF MORE THAT ONE.
+  //        EACH YEAR WOULD RESULT IN DIFFERENT CHART AND DATA
+
   // Fetch projects Data
   const projects = await getProjects();
   const data = createChartData(projects);
   document.getElementById('chart').append(createChartTest(data[2025]))
+  document.getElementById('totalVolume').append(getTotalVolume(projects))
+  getVolumePercentage(projects)
+
+  function getTotalVolume(projects){
+    let totalVolume = 0;
+
+    projects.forEach(project => {
+      const total = project.volume.total;
+      const volumeEntry = project.type === 'duration' ? secondsConverter(total).hours : total;
+      totalVolume += volumeEntry;
+    })
+
+    return totalVolume;
+  }
+
+  function getVolumePercentage(projects){
+    const data = createChartData(projects)
+    const testData = data[2025]
+
+    // Find first entry
+    let firstEntry = 0;
+    
+    console.log(testData)
+  }
 
   function createChartData(projects) {
     const data = {}
@@ -48,8 +87,8 @@ export const mainDashboardJs = async function () {
         // Each month
         for (const [key, value] of Object.entries(volume)) {
 
-          // A D D  T H I S  :  && !(currentYear === year && key > currentMonth)
-          if (Number.isInteger(Number(key))) {
+          // A D D  T H I S  : && !(currentYear === year && key > currentMonth) )
+          if (Number.isInteger(Number(key)) ) {
             const volumeEntry = project.type === 'duration' ? secondsConverter(value).hours : value;
 
             const entry = {
@@ -67,12 +106,10 @@ export const mainDashboardJs = async function () {
         }
       })
     })
-
     return data;
   }
 
   function createChartTest(data) {
-    console.log(data)
 
     // Graph Dimentions
     const width = 700;
@@ -151,106 +188,30 @@ export const mainDashboardJs = async function () {
       .style("color", '#a6b1d8')
       .attr("dy", "2em");
 
-      // Define the line
-      const line = d3.line()
+    // Define the line
+    const line = d3.line()
       .x(d => x(d.month))
       .y(d => y(d.volume));
 
-      // Draw the line
-      svg.append("path")
+    // Draw the line
+    svg.append("path")
       .datum(data)
       .attr("fill", "none")
       .attr("stroke", "#00baf3") // Line color
       .attr("stroke-width", 2)
       .attr("d", line);
 
-    return svg.node();
-  }
-
-  function createChart(data) {
-  
-    const width = 700;
-    const height = 270;
-    const marginTop = 30;
-    const marginRight = 50;
-    const marginBottom = 60;
-    const marginLeft = 80;
-
-    // Create Horizontal scale for months
-    const x = d3.scaleLinear()
-      .domain([0, 11])
-      .range([marginLeft, width - marginRight])
-
-    // Create Vertical scale for volume
-    const y = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d.volume)])
-      .range([height - marginBottom, marginTop]);
-    
-
-    // Create scale for all the projects
-    const projects = data.map(d => d.projectName)
-    const color = d3.scaleOrdinal()
-      .domain(projects)
-      .range(d3.schemeCategory10);
-    
-
-    //Creating the SVG Container
-    const svg = d3.create("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewbox", [0, 0, width, height])
-      .attr("style", "max-width: 100%; height: auto; font: 10px sans-mona");
-
-
-    // // Horizontal axis
-    svg.append("g")
-    .attr("transform", `translate(${marginLeft},0)`) // Position it on the left side
-    .call(d3.axisLeft(y)
-      .ticks(5)
-      .tickSize(0)) 
-    .call(g => g.select(".domain").remove())
-    .selectAll("text")
-    .attr("dx", "-2em") 
-    .style("color", '#a6b1d8'); 
-
-
-    // bottom axis 
-    svg.append("g")
-    .attr("transform", `translate(0,${height - marginBottom})`)
-    .call(d3.axisBottom(x)
-      .tickValues([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) 
-      .tickFormat(d => monthsConverter(d, 'short')) 
-      .ticks(12)
-      .tickSize(0))
-    .call(g => g.select(".domain").remove())
-    .selectAll("text")  
-    .style("color", '#a6b1d8')
-    .attr("dy", "2em");
-
-    // Add a container for each series.
-    const serie = svg.append("g")
-      .selectAll()
-      .data(d3.group(data, d => d.projectName))
-      .join("g")
-
-    // Draw the lines.
-    serie.append("path")
-    .attr("fill", "none")
-    .attr("stroke", '#00baf3')
-    .attr("stroke-width", 1.5)
-    .attr("d", d => d3.line()
-        .x(d => x(d.month))
-        .y(d => y(d.volume))(d[1]));
-      
-    // When user clicks dot - overview data would appear
-    const targetProject = document.getElementById('targetProject');
-    const targetMonth = document.getElementById('targetMonth');
-    const targetVolume = document.getElementById('targetVolume');
-    function createOverview(projectName, month, volume) {
-      targetProject.innerText = projectName;
-      targetMonth.innerText = monthsConverter(month, 'long');
-      targetVolume.innerText = volume;
+    if (data.length === 1) {
+      svg.selectAll("circle")
+      .data(data)
+      .enter()
+      .append("circle")
+      .style("fill", "#00baf3")
+      .attr("r", 4)
+      .attr("cx", (d) => x(d.month))
+      .attr("cy", (d) => y(d.volume));
     }
+   
     return svg.node();
   }
 
