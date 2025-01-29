@@ -1,72 +1,244 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-import { secondsConverter } from "./converters.js";
-import { monthsConverter } from "./converters.js";
-
+import { secondsConverter, monthsConverter  } from "./converters.js";
 export const mainDashboardHtml = `
-  <div class="flex mt-20 ml-10">
-    <div class="bg-secondary-100 rounded-2xl">
-      <div class="pl-[50px] pt-[30px]">
-        <div class="flex items-center gap-[6px] text-neutral-200">
+  <div class="m-10">
+    <div class="mb-10 w-full flex justify-between">
+      <h2 class="text-xl font-bold tracking-wide">Analytics</h2>
+      <div class="relative">
+        <button 
+          id="selectedYear"
+          class="w-[92px] h-8 flex items-center justify-center gap-1 text-sm tracking-widest
+              bg-gradient-to-r from-[#C139F3] to-[#7E24FB] rounded">
+          <span id="selectedYearText">2025</span>
           <span>
             <img 
-              class="icon w-4" 
-              src="static/images/clock.svg" 
-              alt="puzzle icon">
+              class="icon w-3" 
+              src="static/images/arrow-down.svg" 
+              alt="arrow down icon">
           </span>
-          <p>Total volume over time</p>
-        </div>
-        <p id="totalVolume" class="text-2xl pt-[10px]"></p>
-      </div>
-      <div id="chart" class="flex"></div>
-    </div>
-    <div class="flex justify-center items-center mt-10 hidden">
+        </button>
+
         <div 
-          id="overview" 
-          class="flex flex-col justify-center items-center
-          text-primary-200 bg-secondary-100 w-80 py-5">
-          <span id="targetProject"></span>
-          <span id="targetMonth"></span>
-          <span id="targetVolume"></span>
+          id="yearsButtons"
+          class="flex flex-col absolute pt-4 gap-1 max-h-0 overflow-hidden transition-all ease-in-out">
         </div>
-      </div> 
+
+      </div>
+    </div>
+    <div class="flex">
+      <div class="bg-secondary-100 rounded-2xl">
+        <div class="px-[50px] pt-[30px]">
+          <div class="flex justify-between text-neutral-200">
+            <div class="flex items-center gap-[6px]">
+              <span>
+                <img 
+                  class="icon w-4" 
+                  src="static/images/clock.svg" 
+                  alt="clock icon">
+              </span>
+              <p>Total volume over time</p>
+            </div>
+            <div 
+              class="py-2 bg-[#0A1330] px-6 text-xs tracking-widest rounded-md flex gap-2">
+              <img 
+                class="icon w-4" 
+                src="static/images/calendar.svg" 
+                alt="clock icon">
+              <span id="chartYear"></span>
+            </div>
+          </div>
+      
+          <div class="flex items-center pt-[10px] gap-2 text-[10px]">
+            <div id="totalVolume" class="text-2xl"></div>
+            <div 
+              id="increase"
+              class="w-15 h-[18px] border border-[#0C534A] bg-[#0A3942] rounded-sm gap-[1px] px-1 flex items-center hidden">
+              <p 
+                id="increasePercentage"
+                class="text-[#17CA74] flex">
+              </p>
+              <img 
+                class="icon w-2" 
+                src="static/images/green-arrow-up.svg" 
+                alt="arrow up icon">
+            </div>
+            <div 
+              id="decrease"
+              class="h-[18px] border border-[#602D47] bg-[#3A2341] rounded-sm gap-[1px] px-1 flex items-center hidden">
+              <p 
+                id="decreasePercentage"
+                class="text-[#FF5966] flex">
+              </p>
+              <img 
+                class="icon w-2" 
+                src="static/images/red-arrow-down.svg" 
+                alt="arrow down icon">
+            </div>
+          </div>
+
+        </div>
+
+        <div id="chart" class="flex"></div>
+       
+      </div>
+      <div class="flex justify-center items-center mt-10 hidden">
+          <div 
+            id="overview" 
+            class="flex flex-col justify-center items-center
+            text-primary-200 bg-secondary-100 w-80 py-5">
+            <span id="targetProject"></span>
+            <span id="targetMonth"></span>
+            <span id="targetVolume"></span>
+          </div>
+        </div> 
+    </div>
   </div>
 `
 export const mainDashboardJs = async function () {
 
-  // TODO : CREATE THE SELECTION BUTTON FOR YEARS IF MORE THAT ONE.
-  //        EACH YEAR WOULD RESULT IN DIFFERENT CHART AND DATA
-
-  // Fetch projects Data
+  const date = new Date();
   const projects = await getProjects();
-  const data = createChartData(projects);
-  document.getElementById('chart').append(createChartTest(data[2025]))
-  document.getElementById('totalVolume').append(getTotalVolume(projects))
-  getVolumePercentage(projects)
+  const data = formatPageData(projects);
+  const chart = document.getElementById('chart');
+  const totalVolume = document.getElementById('totalVolume');
+  const increase = document.getElementById('increasePercentage');
+  const decrease = document.getElementById('decreasePercentage');
+  const currentMonth = date.getMonth();
+  const currentYear = date.getFullYear();
 
-  function getTotalVolume(projects){
+  // Create Year Buttons
+  createYearButtons(data);
+  loadCharts(2025);
+
+  function createYearButtons(data) {
+    const yearsButtons = document.getElementById('yearsButtons');
+    const selectedYear = document.getElementById('selectedYear');
+    const selectedYearText = document.getElementById('selectedYearText');
+
+    const years = []
+    for (const [key, value] of Object.entries(data)) {
+      years.push(Number(key))
+    }
+  
+    years.sort((b, a) => {
+      return a - b;
+    })
+
+    let buttonsHtml = ''
+    years.forEach((year) => {
+
+      let button = `
+        <button 
+          data-year="${year}"
+          class="w-[92px] border border-[#C93CFE] rounded min-h-8
+                hover:bg-white hover:text-primary-200 hover:border-none text-sm tracking-widest">
+        ${year}
+        </button>
+      `
+
+      buttonsHtml += button;
+    })
+  
+    // Add to the DOM
+    yearsButtons.innerHTML = buttonsHtml;
+
+    // then Event listeners
+    yearsButtons.childNodes.forEach((button) => {
+      button.addEventListener('click', (e) => {
+        const year = Number.parseInt(e.target.getAttribute('data-year'));
+        selectedYearText.innerText = year;
+        toggleDropdown()
+        loadCharts(year);
+      })
+    })
+    
+    selectedYear.addEventListener('click', () => {
+     toggleDropdown()
+    })
+
+    function toggleDropdown() {
+      yearsButtons.classList.toggle('max-h-0');
+      yearsButtons.classList.toggle('max-h-40');
+      yearsButtons.classList.toggle('duration-700');
+    }
+  }
+  
+
+  function loadCharts(year) {
+    const yearlyData = data[year];
+    chart.replaceChildren(createChart(yearlyData));
+    totalVolume.replaceChildren(getTotalVolume(yearlyData))
+    setVolumePercentage(year, yearlyData);
+    document.getElementById('chartYear').innerText = year
+  }
+
+  function getTotalVolume(yearlyData){
     let totalVolume = 0;
 
-    projects.forEach(project => {
-      const total = project.volume.total;
-      const volumeEntry = project.type === 'duration' ? secondsConverter(total).hours : total;
-      totalVolume += volumeEntry;
+    yearlyData.forEach(month => {
+      totalVolume += month.volume;
     })
 
     return totalVolume;
   }
 
-  function getVolumePercentage(projects){
-    const data = createChartData(projects)
-    const testData = data[2025]
+  function setVolumePercentage(year, yearlyData){
 
-    // Find first entry
-    let firstEntry = 0;
+    let firstEntry= 0;
+    let lastEntry = 0;
     
-    console.log(testData)
+    for (let i = 0; i < yearlyData.length; i++) {
+      if (yearlyData[i].volume !== 0) {
+        if (firstEntry !== 0 ) {
+          lastEntry = yearlyData[i].volume;
+        } else {
+          firstEntry = yearlyData[i].volume;
+        }
+      }
+    }
+
+    // console.log('Current Year', currentYear);
+    // console.log('clicked Year: ', year)
+    // console.log('First Entry: ', firstEntry);
+    // console.log('Last Entry: ', lastEntry);
+
+    if (!firstEntry) {
+      return;
+    }
+
+    if (year === currentYear) {
+      console.log('test')
+      lastEntry = yearlyData[currentMonth].volume;
+
+      if (currentMonth === 0) { // January
+        increasePercentage.innerText = '100' + '%';
+        increase.parentElement.classList.remove('hidden');
+        return;
+      }
+    }
+  
+    if (lastEntry < firstEntry) {
+      decrease.innerText = '-' + calcPercentage(firstEntry, lastEntry) + '%';
+      decrease.parentElement.classList.remove('hidden');
+    }
+    else if (lastEntry > firstEntry) {
+      increase.innerText = calcPercentage(lastEntry, firstEntry) + '%';
+      increase.parentElement.classList.remove('hidden');
+    }
+
+
+    function calcPercentage(upper, lower) {
+      const difference = upper - lower;
+      const average = (upper + lower) / 2;
+      return ((difference / average) * 100).toFixed(1);
+    }
   }
 
-  function createChartData(projects) {
+  // Make data in a yearly volume like format
+  function formatPageData(projects) {
     const data = {}
+    const currentMonth = date.getMonth();
+    const currentYear = date.getFullYear();
 
     // Create new object with projects data for the chart
     projects.forEach(project => {
@@ -75,9 +247,6 @@ export const mainDashboardJs = async function () {
       project.dateVolume.forEach(volume => {
 
         const year = volume.year;
-        const date = new Date();
-        const currentYear = date.getFullYear();
-        const currentMonth = date.getMonth();
 
         // initiate array for each year
         if (!data[year]) {
@@ -86,9 +255,7 @@ export const mainDashboardJs = async function () {
 
         // Each month
         for (const [key, value] of Object.entries(volume)) {
-
-          // A D D  T H I S  : && !(currentYear === year && key > currentMonth) )
-          if (Number.isInteger(Number(key)) ) {
+          if (Number.isInteger(Number(key)) && !(currentYear === year && key > currentMonth) ) {
             const volumeEntry = project.type === 'duration' ? secondsConverter(value).hours : value;
 
             const entry = {
@@ -109,7 +276,7 @@ export const mainDashboardJs = async function () {
     return data;
   }
 
-  function createChartTest(data) {
+  function createChart(data) {
 
     // Graph Dimentions
     const width = 700;

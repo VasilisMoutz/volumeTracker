@@ -5,6 +5,7 @@ import jsonwebtoken from 'jsonwebtoken'
 export async function login(req, res) {
 
     try {
+      console.log('im here')
       const {username, password} = req.body;
 
       if (!username || !password ) {
