@@ -25,7 +25,9 @@ export const mainDashboardHtml = `
 
       </div>
     </div>
-    <div class="flex">
+    <div class="flex flex-wrap gap-8">
+
+      <!-- L I N E   C H A R T -->
       <div class="bg-secondary-100 rounded-2xl">
         <div class="px-[50px] pt-[30px]">
           <div class="flex justify-between text-neutral-200">
@@ -75,41 +77,43 @@ export const mainDashboardHtml = `
                 alt="arrow down icon">
             </div>
           </div>
-
         </div>
-
         <div id="chart" class="flex"></div>
-       
       </div>
-      <div class="flex justify-center items-center mt-10 hidden">
-          <div 
-            id="overview" 
-            class="flex flex-col justify-center items-center
-            text-primary-200 bg-secondary-100 w-80 py-5">
-            <span id="targetProject"></span>
-            <span id="targetMonth"></span>
-            <span id="targetVolume"></span>
-          </div>
-        </div> 
+
+      <!-- P I E   C H A R T -->
+      <div class="bg-secondary-100 rounded-2xl">
+        <div id="circleChart"></div>
+      </div>
+
     </div>
   </div>
 `
 export const mainDashboardJs = async function () {
 
+  // General Data
   const date = new Date();
   const projects = await getProjects();
-  const data = formatPageData(projects);
-  const chart = document.getElementById('chart');
-  const totalVolume = document.getElementById('totalVolume');
-  const increase = document.getElementById('increasePercentage');
-  const decrease = document.getElementById('decreasePercentage');
   const currentMonth = date.getMonth();
   const currentYear = date.getFullYear();
 
-  // Create Year Buttons
-  createYearButtons(data);
-  loadCharts(2025);
+  // Pie Chart
+  const percentageData = getPieChartData(projects);
+  const pieChart = document.getElementById('circleChart');
 
+  // Line chart
+  const lineChart = document.getElementById('chart');
+  const volumeData = getLineChartData(projects);
+  const totalVolume = document.getElementById('totalVolume');
+  const increase = document.getElementById('increasePercentage');
+  const decrease = document.getElementById('decreasePercentage');
+
+
+  // Load current year and buttons to navigate other years
+  createYearButtons(volumeData);
+  loadCharts(currentYear);
+
+  // ---- ----- ---- Functions section ---- ---- ----- ---- //
   function createYearButtons(data) {
     const yearsButtons = document.getElementById('yearsButtons');
     const selectedYear = document.getElementById('selectedYear');
@@ -165,10 +169,16 @@ export const mainDashboardJs = async function () {
   
 
   function loadCharts(year) {
-    const yearlyData = data[year];
-    chart.replaceChildren(createChart(yearlyData));
-    totalVolume.replaceChildren(getTotalVolume(yearlyData))
-    setVolumePercentage(year, yearlyData);
+
+    // Get data for the year requested
+    const lineChartData = volumeData[year];
+    const pieChartData = percentageData[year];
+
+    // Load to DOM
+    lineChart.replaceChildren(createChart(lineChartData));
+    pieChart.replaceChildren(createPieChart(pieChartData));
+    totalVolume.replaceChildren(getTotalVolume(lineChartData))
+    setVolumePercentage(year, lineChartData);
     document.getElementById('chartYear').innerText = year
   }
 
@@ -184,6 +194,9 @@ export const mainDashboardJs = async function () {
 
   function setVolumePercentage(year, yearlyData){
 
+    hidePercentage(decrease);
+    hidePercentage(increase);
+
     let firstEntry= 0;
     let lastEntry = 0;
     
@@ -197,22 +210,16 @@ export const mainDashboardJs = async function () {
       }
     }
 
-    // console.log('Current Year', currentYear);
-    // console.log('clicked Year: ', year)
-    // console.log('First Entry: ', firstEntry);
-    // console.log('Last Entry: ', lastEntry);
-
     if (!firstEntry) {
       return;
     }
 
     if (year === currentYear) {
-      console.log('test')
       lastEntry = yearlyData[currentMonth].volume;
 
       if (currentMonth === 0) { // January
         increasePercentage.innerText = '100' + '%';
-        increase.parentElement.classList.remove('hidden');
+        showPercentage(increase)
         return;
       }
     }
@@ -220,10 +227,11 @@ export const mainDashboardJs = async function () {
     if (lastEntry < firstEntry) {
       decrease.innerText = '-' + calcPercentage(firstEntry, lastEntry) + '%';
       decrease.parentElement.classList.remove('hidden');
+      showPercentage(decrease);
     }
     else if (lastEntry > firstEntry) {
       increase.innerText = calcPercentage(lastEntry, firstEntry) + '%';
-      increase.parentElement.classList.remove('hidden');
+      showPercentage(increase)
     }
 
 
@@ -232,10 +240,20 @@ export const mainDashboardJs = async function () {
       const average = (upper + lower) / 2;
       return ((difference / average) * 100).toFixed(1);
     }
+
+    function hidePercentage(node) {
+      node.parentElement.classList.add('hidden');
+    }
+
+    function showPercentage(node) {
+      node.parentElement.classList.remove('hidden');
+    }
+
+
   }
 
   // Make data in a yearly volume like format
-  function formatPageData(projects) {
+  function getLineChartData(projects) {
     const data = {}
     const currentMonth = date.getMonth();
     const currentYear = date.getFullYear();
@@ -273,6 +291,54 @@ export const mainDashboardJs = async function () {
         }
       })
     })
+    return data;
+  }
+
+  function getPieChartData(projects) {
+
+    const currentMonth = date.getMonth();
+    const currentYear = date.getFullYear();
+
+    const data = {}
+    let projectVolume = 0;
+  
+    projects.forEach((project) => {
+      project.dateVolume.forEach((volume) => {
+        const year = volume.year;
+
+        // initiate array for each year
+        if (!data[year]) {
+          data[year] = [];
+          data[year].total = 0;
+        }
+
+        // Each month
+        for (const [key, value] of Object.entries(volume)) {
+          if (Number.isInteger(Number(key)) && !(currentYear === year && key > currentMonth) ) {
+            const volumeEntry = project.type === 'duration' ? secondsConverter(value).hours : value;
+            projectVolume += volumeEntry;
+          }
+        }
+
+        const entry = {
+          'category': project.name,
+          'value': projectVolume,
+          'color': getRandomColor()
+        }
+
+        data[year].push(entry); 
+        data[year].total += projectVolume;
+        projectVolume = 0;
+      })
+    })
+
+  
+    for (const [key, value] of Object.entries(data)) {
+      value.forEach((project) => {
+        const percentage = ((project.value / value.total) * 100).toFixed(2);
+        project.value = percentage
+      })
+    }
     return data;
   }
 
@@ -378,8 +444,104 @@ export const mainDashboardJs = async function () {
       .attr("cx", (d) => x(d.month))
       .attr("cy", (d) => y(d.volume));
     }
-   
     return svg.node();
+  }
+
+  function createPieChart(data) {
+
+    const width = 300, height = 300, radius = 120;
+    const container = document.createElement("div");
+
+    // Create SVG
+    // const svg = d3.select("#circleChart").append("div")
+    //     .append("svg")
+    //     .attr("width", width)
+    //     .attr("height", height)
+    //     .append("g")
+    //     .attr("transform", `translate(${width / 2}, ${height / 1.5})`);
+
+    // Step 1: Create SVG element (in memory)
+    const svg = d3.create("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+    // Step 2: Append <g> element and move to center
+    const g = svg.append("g")
+    .attr("transform", `translate(${width / 2}, ${height / 1.5})`);
+
+    // Step 3: Define pie layout (for a half-circle)
+    const pie = d3.pie()
+    .value(d => d.value)
+    .startAngle(-Math.PI / 1.3) 
+    .endAngle(Math.PI / 1.3)
+    .sort(null);
+
+    // Step 4: Define arc generator
+    const arc = d3.arc()
+    .innerRadius(radius - 20)
+    .outerRadius(radius);
+
+    // Step 5: Bind data and create arcs
+    g.selectAll("path")
+    .data(pie(data))
+    .enter()
+    .append("path")
+    .attr("d", arc)
+    .attr("fill", d => d.data.color)
+    .attr("stroke", "#000")
+    .attr("stroke-width", 0);
+
+    // Step 6: Add center text
+    g.append("text")
+    .attr("text-anchor", "middle")
+    .attr("font-size", "24px")
+    .attr("fill", "#fff")
+    .text("150k");
+
+    // Step 7: Append SVG to the DOM
+    container.appendChild(svg.node());
+
+    // Create Legend
+    const legend = document.createElement("div")
+    legend.style.display = "flex";
+    legend.style.flexDirection = "column";
+    legend.style.alignItems = "center";
+    legend.style.color = "#fff";
+    legend.style.fontSize = "14px";
+    legend.style.marginTop = "10px";
+
+    data.forEach(d => {
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.alignItems = "center";
+        row.style.margin = "5px";
+
+        const colorBox = document.createElement("div");
+        colorBox.style.width = "12px";
+        colorBox.style.height = "12px";
+        colorBox.style.background = d.color;
+        colorBox.style.marginRight = "8px";
+
+        const text = document.createElement("span");
+        text.innerText = `${d.category} - ${d.value}%`
+
+        row.appendChild(colorBox);
+        row.appendChild(text);
+        legend.appendChild(row);
+    });
+
+    container.appendChild(legend);
+
+    return container;
+  }
+
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
   async function getProjects() {
