@@ -9,7 +9,7 @@ router.get('/', auth, function( req, res ) {
   res.sendFile(path.join(__dirname, '/public', 'index.html'));
 });
 
-router.get('*', (req, res) => {
+router.get('*', auth, (req, res) => {
   res.redirect('/');
 })
 

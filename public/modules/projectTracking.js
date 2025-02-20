@@ -158,17 +158,19 @@ export const projectTrackingJS = function(data) {
 
   submitBtn.addEventListener('click', async () => {
     try {
-      await fetch('/api/projects/update', {
+      const response = await fetch('/api/projects/update', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json', 
         },
         body: JSON.stringify({
-          userId: data.user,
           projectId: data.id,
           volume: volume
         })
       })
+      if (response.statusText === 'No token found') {
+        location.reload();
+      }
     } catch (err) {
       console.log(err);
     }

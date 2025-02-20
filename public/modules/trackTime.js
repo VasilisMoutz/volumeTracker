@@ -69,6 +69,12 @@ export const trackJs = async function() {
         const result = await response.json();
         return result;
       }
+      else if (response.statusText === 'No token found') {
+        location.reload();
+      }
+      else { 
+        console.error('Error:', response.statusText);
+      }
     } catch (err) {
       console.log(err);
     }

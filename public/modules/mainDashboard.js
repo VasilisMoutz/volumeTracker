@@ -120,7 +120,7 @@ export const mainDashboardJs = async function () {
     const selectedYearText = document.getElementById('selectedYearText');
 
     const years = []
-    for (const [key, value] of Object.entries(data)) {
+    for (const [key] of Object.entries(data)) {
       years.push(Number(key))
     }
   
@@ -323,19 +323,20 @@ export const mainDashboardJs = async function () {
         const entry = {
           'category': project.name,
           'value': projectVolume,
-          'color': getRandomColor()
         }
 
-        data[year].push(entry); 
-        data[year].total += projectVolume;
-        projectVolume = 0;
+        if (projectVolume) {
+          data[year].push(entry); 
+          data[year].total += projectVolume;
+          projectVolume = 0;
+        }
       })
     })
 
   
     for (const [key, value] of Object.entries(data)) {
       value.forEach((project) => {
-        const percentage = ((project.value / value.total) * 100).toFixed(2);
+        const percentage = ((project.value / value.total) * 100).toFixed(0);
         project.value = percentage
       })
     }
@@ -451,82 +452,98 @@ export const mainDashboardJs = async function () {
 
     const width = 300, height = 300, radius = 120;
     const container = document.createElement("div");
+    const colorScale = d3.scaleOrdinal(d3.schemeDark2);
 
-    // Create SVG
-    // const svg = d3.select("#circleChart").append("div")
-    //     .append("svg")
-    //     .attr("width", width)
-    //     .attr("height", height)
-    //     .append("g")
-    //     .attr("transform", `translate(${width / 2}, ${height / 1.5})`);
-
-    // Step 1: Create SVG element (in memory)
+    // Create SVG element
     const svg = d3.create("svg")
     .attr("width", width)
     .attr("height", height);
 
-    // Step 2: Append <g> element and move to center
+    // append <g> element and move to center
     const g = svg.append("g")
     .attr("transform", `translate(${width / 2}, ${height / 1.5})`);
 
-    // Step 3: Define pie layout (for a half-circle)
+    // Define pie layout (for a half-circle)
     const pie = d3.pie()
     .value(d => d.value)
     .startAngle(-Math.PI / 1.3) 
     .endAngle(Math.PI / 1.3)
     .sort(null);
 
-    // Step 4: Define arc generator
+    // Define arc generator
     const arc = d3.arc()
     .innerRadius(radius - 20)
     .outerRadius(radius);
 
-    // Step 5: Bind data and create arcs
+    // Bind data and create arcs
     g.selectAll("path")
     .data(pie(data))
     .enter()
     .append("path")
     .attr("d", arc)
-    .attr("fill", d => d.data.color)
+    .attr("fill", d => colorScale(d.data.category))
     .attr("stroke", "#000")
     .attr("stroke-width", 0);
 
-    // Step 6: Add center text
+    // Add center text
     g.append("text")
     .attr("text-anchor", "middle")
-    .attr("font-size", "24px")
+    .attr("font-size", "36px")
     .attr("fill", "#fff")
-    .text("150k");
+    .text(data.total);
 
-    // Step 7: Append SVG to the DOM
+    // Append SVG to the DOM
     container.appendChild(svg.node());
 
     // Create Legend
     const legend = document.createElement("div")
     legend.style.display = "flex";
     legend.style.flexDirection = "column";
-    legend.style.alignItems = "center";
-    legend.style.color = "#fff";
+    legend.style.alignItems = "start";
+    legend.style.color = "#a6b1d8";
     legend.style.fontSize = "14px";
     legend.style.marginTop = "10px";
+    legend.style.padding = "20px";
+    legend.style.paddingTop = "0";
+    legend.style.maxHeight = "160px";
+    legend.style.overflowY = "auto";
+    legend.style.overflowX = "hidden";
+    legend.style.scrollbarWidth = "thin";
+    legend.style.setProperty("scrollbar-color", "#fff #0C1739");
 
     data.forEach(d => {
         const row = document.createElement("div");
         row.style.display = "flex";
-        row.style.alignItems = "center";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center"
+        row.style.width = "100%";
         row.style.margin = "5px";
 
+        const description = document.createElement("div");
+        description.style.display = "flex";
+        description.style.alignItems = "center"
+        description.style.width = "100%";
+
         const colorBox = document.createElement("div");
-        colorBox.style.width = "12px";
-        colorBox.style.height = "12px";
-        colorBox.style.background = d.color;
+        colorBox.style.width = "10px";
+        colorBox.style.height = "10px";
+        colorBox.style.borderRadius = "50%";
+        colorBox.style.background = colorScale(d.category)
         colorBox.style.marginRight = "8px";
 
         const text = document.createElement("span");
-        text.innerText = `${d.category} - ${d.value}%`
+        text.innerText = `${d.category}`;
 
-        row.appendChild(colorBox);
-        row.appendChild(text);
+        const percentage = document.createElement("span");
+        percentage.innerText = `${d.value}%`
+        percentage.style.color = '#FFF'
+        percentage.style.width = '30px';
+
+        description.appendChild(colorBox);
+        description.appendChild(text);
+
+        row.appendChild(description);
+        row.appendChild(percentage);
         legend.appendChild(row);
     });
 
@@ -535,21 +552,15 @@ export const mainDashboardJs = async function () {
     return container;
   }
 
-  function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-
   async function getProjects() {
     try {
       const response = await fetch('/api/projects/get', {method: 'GET'});
       if (response.ok) {
         const result = await response.json();
         return result;
+      }
+      else if (response.statusText === 'No token found') {
+        location.reload();
       }
     } catch (err) {
       console.log(err);

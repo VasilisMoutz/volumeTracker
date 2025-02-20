@@ -1,8 +1,11 @@
 import jwt from 'jsonwebtoken'
 import { logout } from '../controllers/user.controller.js';
+import NodeCache from 'node-cache';
+const userCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 
 export async function auth(req, res, next) {
-  const token = req.cookies["authToken"];
+
+  const token = req.cookies?.authToken;
 
   const authRoute = req.originalUrl === '/auth/signup' || 
                     req.originalUrl === '/auth/login'
@@ -11,15 +14,20 @@ export async function auth(req, res, next) {
     return res.redirect('/auth/login');
   }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Token Verified: ', decoded);
-  } catch (error) {
-    console.log('JWT Verification failed', error);
-    await logout(req, res);
+  if (token) {
+    const user = userCache.get(token);
+
+    if (!user) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userCache.set(token, decoded);
+      } catch (error) {
+        console.log('JWT Verification failed', error);
+        await logout(req, res);
+      }
+    }
   }
 
-  next()
-  
+  next();
 }
 

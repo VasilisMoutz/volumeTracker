@@ -5,7 +5,7 @@ export const createProjectHtml = `
       <form 
         enctype="multipart/form-data"
         id="projectForm"
-        class="bg-secondary-100 mt-6 border border-secondary-400 rounded-2xl w-[650px]">
+        class="bg-secondary-100 mt-6 rounded-2xl w-[650px]">
         <div class="px-9 flex flex-col">
           <div class="py-10 flex justify-between">
             <div class="flex items-center gap-2">
@@ -14,7 +14,7 @@ export const createProjectHtml = `
             </div>
             <input 
               name="projectName"
-              class="bg-secondary-100 p-[14px] border border-secondary-400 rounded w-[365px]"
+              class="p-[14px] bg-primary-200 rounded w-[365px]"
               type="text" 
               placeholder="Project"/>
           </div>
@@ -36,7 +36,7 @@ export const createProjectHtml = `
                 <label 
                   for="duration"
                   class="peer-checked:bg-primary-100 
-                    border border-secondary-400  px-10 py-5 cursor-pointer">
+                    border border-secondary-400 px-10 py-5 cursor-pointer">
                     Duration
                  </label>
               </div>
@@ -49,7 +49,7 @@ export const createProjectHtml = `
                   value="frequency"/>
                 <label 
                   class="peer-checked:bg-primary-100 
-                  border border-secondary-400  px-10 py-5 cursor-pointer"
+                  border border-secondary-400 px-10 py-5 cursor-pointer"
                   for="frequency">
                     Frequency
                   </label>
@@ -62,10 +62,24 @@ export const createProjectHtml = `
                 <img class="w-5" src="static/images/img.svg" alt="Photo icon">
                 <label class="text-lg">Photo</label>
               </div>
-              <input 
-                type="file" 
-                name="projectImage" 
-                accept="image/png, image/jpeg" />
+              <div class="flex w-[365px]">
+
+                <label>
+                  <input 
+                    id="projectImage"
+                    type="file" 
+                    name="projectImage" 
+                    accept="image/png, image/jpeg"
+                    class="text-sm text-grey-500
+                    file:mr-5 file:py-2 file:px-6
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-medium
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:cursor-pointer hover:file:bg-amber-50
+                    hover:file:text-amber-700
+                  "/>
+                </label>
+              </div>
           </div>
           <button 
             type="submit"
@@ -94,7 +108,11 @@ export const createProjectJs = function() {
       if (response.ok) {
         const result = await response.json();
         console.log(result);
-      } else { 
+      }
+      else if (response.statusText === 'No token found') {
+        location.reload();
+      } 
+      else { 
         console.error('Error:', response.statusText);
       }
     } catch (error) {
