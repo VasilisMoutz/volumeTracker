@@ -10,17 +10,6 @@ const header = `
           class="w-[352px] h-[42px] border border-secondary-400 rounded p-3">
       </div>
     </div>
-    <div class="relative">
-      <button id="periodsBtn" class="bg-primary-100 w-[84px] h-[30px] rounded-lg text-xs">Sort by</button>
-      <div 
-        id="timePeriods" 
-        class="hidden flex flex-col absolute bg-secondary-100 w-full text-xs rounded-lg mt-2">
-        <a class="hover:bg-white hover:text-primary-200 text-center w-full py-3 rounded" href="#">Today</a>
-        <a class="hover:bg-white hover:text-primary-200 text-center w-full py-3 rounded" href="#">Week</a>
-        <a class="hover:bg-white hover:text-primary-200 text-center w-full py-3 rounded" href="#">Month</a>
-        <a class="hover:bg-white hover:text-primary-200 text-center w-full py-3 rounded" href="#">Year</a>
-      </div>
-    </div>
   </div>
 `
 
@@ -32,16 +21,19 @@ const main = `
 `
 
 export const trackJs = async function() {
-  const timePeriods = document.getElementById('timePeriods');
-  const periodsBtn = document.getElementById('periodsBtn');
   const projects = await getProjects();
-  console.log(projects)
   const mainContainer = document.getElementById('projects-container');
+  const projectNames = [];
+  const searchBar = document.getElementById('searchBar').addEventListener("input", (event) => {
+    const searchText = event.target.value;
+    searchProjects(searchText);
+  });
 
   // Creating the cards
   for (const project of projects) {
     let projectCard = `
       <div
+        data-name="${project.name}"
         data-id="${project.id}"
         class="card w-[320px] cursor-pointer group">
         <div class="w-full overflow-hidden rounded-tl-2xl rounded-tr-2xl">
@@ -59,7 +51,21 @@ export const trackJs = async function() {
       </div>
     `
     mainContainer.innerHTML += projectCard;
+    projectNames.push(project.name);
   }
+
+  function searchProjects(text) {
+    Array.from(mainContainer.children).forEach((item) => {
+      const itemName = item.getAttribute("data-name").toLocaleLowerCase();
+      if (!itemName.includes(text.toLocaleLowerCase())) {
+        item.classList.add('hidden')
+      } else {
+        item.classList.remove('hidden')
+      }
+    });
+  }
+
+
 
   // Fetch all projects
   async function getProjects() {
@@ -89,12 +95,6 @@ export const trackJs = async function() {
       document.dispatchEvent(event);
     })
   }
-
-  // Sorting Button
-  periodsBtn.addEventListener('click', () => {
-      timePeriods.classList.toggle('hidden');
-  })
-
 };
 
 export const trackTimeHtml = header + main;
