@@ -171,6 +171,9 @@ export const projectTrackingJS = function(data) {
       if (response.statusText === 'No token found') {
         location.reload();
       }
+      if (response.ok) {
+        document.getElementById('trackTime').click();
+      }
     } catch (err) {
       console.log(err);
     }

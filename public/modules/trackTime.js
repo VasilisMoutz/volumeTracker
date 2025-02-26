@@ -20,11 +20,13 @@ const main = `
   </div>
 `
 
-export const trackJs = async function() {
+export const trackTimeHtml = header + main;
+
+export const trackJs = async function(useCache) {
   const projects = await getProjects();
   const mainContainer = document.getElementById('projects-container');
   const projectNames = [];
-  const searchBar = document.getElementById('searchBar').addEventListener("input", (event) => {
+  document.getElementById('searchBar').addEventListener("input", (event) => {
     const searchText = event.target.value;
     searchProjects(searchText);
   });
@@ -65,12 +67,10 @@ export const trackJs = async function() {
     });
   }
 
-
-
   // Fetch all projects
   async function getProjects() {
     try {
-      const response = await fetch('/api/projects/get', {method: 'GET'});
+      const response = await fetch(`/api/projects/get?cached=${useCache}`, {method: 'GET'});
       if (response.ok) {
         const result = await response.json();
         return result;
@@ -97,6 +97,3 @@ export const trackJs = async function() {
   }
 };
 
-export const trackTimeHtml = header + main;
-
-export const projectHtml = ''

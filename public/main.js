@@ -1,4 +1,3 @@
-import { dashboardHtml, dashboardJs } from "/static/modules/dashboard.js";
 import { createProjectHtml, createProjectJs } from "/static/modules/createProject.js";
 import { trackTimeHtml, trackJs } from "/static/modules/trackTime.js"
 import { getProjectTrackingHtml, projectTrackingJS } from "./modules/projectTracking.js";
@@ -35,8 +34,9 @@ buttons.forEach(button => {
         createProjectJs();
         break;
       case 'track-time':
+        const useCache = event.isTrusted;
         handleNavClick(event, trackTimeHtml,  buttonType);
-        trackJs();
+        trackJs(useCache);
         break;
     }
   })

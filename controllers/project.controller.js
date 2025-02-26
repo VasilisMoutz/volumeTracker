@@ -83,6 +83,8 @@ export async function ProjectUpdate(req, res) {
 
 export async function ProjectsGet(req, res) {
 
+  const useCached = req.query.cached;
+
   try {
     const token = req.cookies["authToken"];
 
@@ -97,7 +99,8 @@ export async function ProjectsGet(req, res) {
     const userID = getUserIdFromCookie(token);
     const cashedProjects = projectCache.get(userID);
   
-    if (!cashedProjects) {
+    if (!cashedProjects || useCached === 'false') {
+      
       const projects = [];
       const validUser = await User.findById(userID);
 
