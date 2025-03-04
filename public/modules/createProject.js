@@ -98,16 +98,15 @@ export const createProjectJs = function() {
     event.preventDefault();
     const form = event.target;
     const formData = new FormData(form);
-
+    
     try {
       const response = await fetch('/api/project/create', {
         method: 'POST',
         body: formData
       })
-  
+      
       if (response.ok) {
-        const result = await response.json();
-        console.log(result);
+        document.getElementById('trackTime').click()
       }
       else if (response.statusText === 'No token found') {
         location.reload();

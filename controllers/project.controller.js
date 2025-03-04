@@ -200,7 +200,7 @@ export async function ProjectCreate(req, res) {
   validUser.projects.push(newProject);
   await validUser.save();
 
-  res.status(newProject);
+  return res.status(newProject);
 }
 
 function getUserIdFromCookie(cookie) {

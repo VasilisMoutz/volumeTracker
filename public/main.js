@@ -68,16 +68,18 @@ function addClickedStyles(event) {
   navLinks.forEach(element => {
     if (element.getAttribute('active') === 'true'){
       if (element !== event.target) {
-        element.classList.remove('border-l-4');
-        element.classList.remove('bg-primary-200');
-        element.classList.remove('ml-4');
-        element.classList.remove('text-white')
+        element.classList.remove('md:border-l-4');
+        element.classList.remove('md:bg-primary-200');
+        element.classList.remove('md:ml-4');
+        element.classList.remove('md:text-white');
+        element.classList.remove('bg-primary-300');
         element.setAttribute('active', 'false');
       } else {
-        element.classList.add('border-l-4');
-        element.classList.add('bg-primary-200');
-        element.classList.add('ml-4');
-        element.classList.add('text-white')
+        element.classList.add('md:border-l-4');
+        element.classList.add('md:bg-primary-200');
+        element.classList.add('md:ml-4');
+        element.classList.add('md:text-white')
+        element.classList.add('bg-primary-300')
       }
     }  
   });

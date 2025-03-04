@@ -17,7 +17,8 @@ export default {
       colors: {
         primary: {
           100: '#cb3bff',
-          200: '#091330'
+          200: '#091330',
+          300: '#5307bc',
         },
         secondary: {
           100: '#0B1739',

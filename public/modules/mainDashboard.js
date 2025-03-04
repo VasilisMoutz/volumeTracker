@@ -1,8 +1,8 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import { secondsConverter, monthsConverter  } from "./converters.js";
 export const mainDashboardHtml = `
-  <div class="m-10">
-    <div class="mb-10 w-full flex justify-between">
+  <div class="ml-1 mt-10 mr-5 md:m-10">
+    <div class="mb-5 md:mb-10 w-full flex justify-between">
       <h2 class="text-xl font-bold tracking-wide">Analytics</h2>
       <div class="relative">
         <button 
@@ -25,10 +25,10 @@ export const mainDashboardHtml = `
 
       </div>
     </div>
-    <div class="flex flex-wrap gap-8">
+    <div class="flex flex-wrap gap-8 justify-center md:justify-normal">
 
       <!-- L I N E   C H A R T -->
-      <div class="bg-secondary-100 rounded-2xl">
+      <div class="bg-secondary-100 rounded-2xl hidden md:block">
         <div class="px-[50px] pt-[30px]">
           <div class="flex justify-between text-neutral-200">
             <div class="flex items-center gap-[6px]">
@@ -82,7 +82,7 @@ export const mainDashboardHtml = `
       </div>
 
       <!-- P I E   C H A R T -->
-      <div class="bg-secondary-100 rounded-2xl">
+      <div class="bg-secondary-100 rounded-2xl mt-4 md:mt-0">
         <div id="circleChart"></div>
       </div>
 
@@ -357,7 +357,7 @@ export const mainDashboardJs = async function () {
     const svg = d3.create("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("viewbox", [0, 0, width, height])
+    .attr("viewBox", `0 0 700 270`)
     .attr("style", "max-width: 100%; height: auto; font: 10px sans-mona");
 
     // Gradient definition
@@ -450,14 +450,19 @@ export const mainDashboardJs = async function () {
 
   function createPieChart(data) {
 
-    const width = 300, height = 300, radius = 120;
+    const isMobile = window.innerWidth < 766 ? true : false;
+    const width = isMobile ? 250 : 300;
+    const height = isMobile ? 200 : 300;
+    const radius =  isMobile ? 80 : 120;
+
     const container = document.createElement("div");
     const colorScale = d3.scaleOrdinal(d3.schemeDark2);
 
     // Create SVG element
     const svg = d3.create("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .attr("viewBox", `0 0 ${width} ${height}`)
 
     // append <g> element and move to center
     const g = svg.append("g")
@@ -472,7 +477,7 @@ export const mainDashboardJs = async function () {
 
     // Define arc generator
     const arc = d3.arc()
-    .innerRadius(radius - 20)
+    .innerRadius(radius - (isMobile ? 15 : 20))
     .outerRadius(radius);
 
     // Bind data and create arcs
@@ -488,7 +493,7 @@ export const mainDashboardJs = async function () {
     // Add center text
     g.append("text")
     .attr("text-anchor", "middle")
-    .attr("font-size", "36px")
+    .attr("font-size", `${isMobile ? '24px' : '36px'}`)
     .attr("fill", "#fff")
     .text(data.total);
 
@@ -498,6 +503,7 @@ export const mainDashboardJs = async function () {
     // Create Legend
     const legend = document.createElement("div")
     legend.style.display = "flex";
+    legend.style.gap = "4px"
     legend.style.flexDirection = "column";
     legend.style.alignItems = "start";
     legend.style.color = "#a6b1d8";
@@ -505,11 +511,14 @@ export const mainDashboardJs = async function () {
     legend.style.marginTop = "10px";
     legend.style.padding = "20px";
     legend.style.paddingTop = "0";
-    legend.style.maxHeight = "160px";
-    legend.style.overflowY = "auto";
-    legend.style.overflowX = "hidden";
     legend.style.scrollbarWidth = "thin";
     legend.style.setProperty("scrollbar-color", "#fff #0C1739");
+
+    if (!isMobile) {
+      legend.style.maxHeight = "160px";
+      legend.style.overflowY = "auto";
+      legend.style.overflowX = "hidden";
+    }
 
     data.forEach(d => {
         const row = document.createElement("div");

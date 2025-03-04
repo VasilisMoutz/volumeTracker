@@ -9,40 +9,41 @@
 </head>
 <body class="bg-neutral-900 text-white font-mona">
   <div class="flex">
-    <div class="flex flex-col h-screen sticky top-0 w-80 bg-neutral-800 border-r-2 border-primary-200 drop-shadow-md overflow-auto">
+    <div class="flex flex-col h-screen sticky top-0 min-w-16 w-16 md:w-80 bg-neutral-800 md:border-r-2 border-primary-200 drop-shadow-md overflow-auto px-1.5">
       <div 
-        class="flex py-10 pl-10 gap-2">
+        class="flex justify-center py-10 md:justify-normal md:pl-10 md:gap-2">
         <img src="static/images/logo.svg">
-        <h2 class="font-bold text-xl tracking-wider">EffortTrack</h2>
+        <h2 class="font-bold text-xl tracking-wider hidden md:block">EffortTrack</h2>
       </div>
-      <nav class="flex flex-col justify-between pl-7 flex-auto">
-        <div class="font-medium text-sm text-neutral-100 flex flex-col gap-4 mr-4">
+      <nav class="flex flex-col justify-between md:pl-7 flex-auto">
+        <div class="font-medium text-sm text-neutral-100 flex flex-col gap-4 md:mr-4">
           <button 
             id="dashboard-btn"
             data="dashboard" 
             active="true"
-            class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in pl-4 
-                  border-primary-100 border-l-4 bg-primary-200 ml-4 text-white hover:text-white">
+            class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in md:pl-4 justify-center md:justify-normal
+                  border-primary-100 md:border-l-4 md:bg-primary-200 md:ml-4 text-white hover:text-white
+                  bg-primary-300">
             <img class="icon w-5 pointer-events-none" src="static/images/home.svg" alt="test">       
-            <span class="text-lg pointer-events-none ">
+            <span class="text-lg pointer-events-none hidden md:block">
               Dashboard
             </span>
           </button>
 
           <button 
             data="create-project"
-            class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in pl-4 border-primary-100 hover:text-white">
+            class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in md:pl-4 border-primary-100 hover:text-white justify-center md:justify-normal">
             <img class="icon w-5 pointer-events-none" src="static/images/star.svg" alt="star icon">
-            <span class="text-lg pointer-events-none">
+            <span class="text-lg pointer-events-none hidden md:block">
               Create Project
             </span>
           </button>
           <button 
             id="trackTime"
-            class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in pl-4 border-primary-100 hover:text-white"
+            class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in md:pl-4 border-primary-100 hover:text-white justify-center md:justify-normal"
             data="track-time">
             <img class="icon w-5 pointer-events-none" src="static/images/puzzle.svg" alt="puzzle icon">    
-            <span class="text-lg pointer-events-none">Track Volume</span>
+            <span class="text-lg pointer-events-none hidden md:block">Track Volume</span>
           </button>
         </div>
         <div class="flex flex-col gap-4 pl-4 mb-14">
@@ -51,12 +52,12 @@
               <span id="NameFirstLatter"></span>
             </div>
             <p 
-              class="text-neutral-100 text-lg"
+              class="text-neutral-100 text-lg hidden md:block"
               id="FullName"></p>
           </div>
           <button class="flex gap-2 text-neutral-100 w-fit">
             <img class="icon fill-neutral-100 w-8" src="static/images/logout.svg" alt="logout icon">
-            <span class="text-neutral-100 text-lg hover:text-white transition">Logout</span>
+            <span class="text-neutral-100 text-lg hover:text-white transition hidden md:block">Logout</span>
           </button>
         </div>
       </nav>
