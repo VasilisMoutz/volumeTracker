@@ -1,13 +1,13 @@
 const header = `
   <div class="flex items-center p-10 justify-between flex-auto gap-4">
-    <div class="flex gap-[50px] items-center">
+    <div class="flex flex-col lg:flex-row gap-4 lg:gap-[50px] lg:items-center">
       <h2 class="text-xl font-bold">Track Time</h2>
       <div class="bg-secondary-100">
         <input 
           id="searchBar" 
           type="text" 
           placeholder="Search for..."
-          class="w-[352px] h-[42px] border border-secondary-400 rounded p-3">
+          class="w-full lg:w-[352px] h-[42px] border border-secondary-400 rounded p-3">
       </div>
     </div>
   </div>
@@ -15,7 +15,7 @@ const header = `
 
 const main = `
   <div 
-    class="flex flex-wrap gap-4 p-10"
+    class="flex flex-wrap gap-4 p-5 lg:p-10"
     id="projects-container">
   </div>
 `
@@ -37,7 +37,7 @@ export const trackJs = async function(useCache) {
       <div
         data-name="${project.name}"
         data-id="${project.id}"
-        class="card w-[320px] cursor-pointer group">
+        class="card w-full max-w-[320px] cursor-pointer group">
         <div class="w-full overflow-hidden rounded-tl-2xl rounded-tr-2xl">
           <img 
             class="object-cover h-56 w-full 

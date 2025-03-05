@@ -7,8 +7,8 @@ export const createProjectHtml = `
         <div class="px-6 md:px-9 flex flex-col">
           <div class="pt-10 pb-5 lg:py-10 flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between">
             <div class="flex items-center gap-2">
-              <img class="w-5" src="static/images/project.svg" alt="project icon">
-              <label class="text-md lg:text-lg">Project Name</label>
+              <img class="w-4 lg:w-5" src="static/images/project.svg" alt="project icon">
+              <label class="text-sm lg:text-lg">Project Name</label>
             </div>
             <input 
               name="projectName"
@@ -18,8 +18,8 @@ export const createProjectHtml = `
           </div>
           <div class="py-5 lg:py-10 flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between">
             <div class="flex items-center gap-2">
-              <img class="w-5" src="static/images/trophy.svg" alt="project icon">
-              <label class="text-md lg:text-lg">Tracking Type</label>
+              <img class="w-4 lg:w-5" src="static/images/trophy.svg" alt="project icon">
+              <label class="text-sm lg:text-lg">Tracking Type</label>
             </div>
             <fieldset class="flex w-full lg:w-[365px] gap-2 md:gap-5">
               
@@ -33,8 +33,8 @@ export const createProjectHtml = `
                   checked />
                 <label 
                   for="duration"
-                  class="peer-checked:bg-primary-100 block text-sm tracking-widest lg:text-md rounded-md
-                    border border-secondary-400 px-6 py-3 lg:px-10 lg:py-5 cursor-pointer">
+                  class="peer-checked:bg-primary-100 text-sm tracking-widest lg:text-md rounded-md
+                    border border-secondary-400 py-3 lg:py-4 cursor-pointer w-[110px] lg:w-[140px] flex justify-center">
                     Duration
                  </label>
               </div>
@@ -46,8 +46,8 @@ export const createProjectHtml = `
                   name="projectType" 
                   value="frequency"/>
                 <label 
-                  class="peer-checked:bg-primary-100 block text-sm tracking-widest lg:text-md rounded-md
-                  border border-secondary-400 px-6 py-3 lg:px-10 lg:py-5 cursor-pointer"
+                  class="peer-checked:bg-primary-100 text-sm tracking-widest lg:text-md rounded-md
+                  border border-secondary-400 py-3 lg:py-4 cursor-pointer w-[110px] lg:w-[140px] flex justify-center"
                   for="frequency">
                     Frequency
                   </label>
@@ -57,19 +57,18 @@ export const createProjectHtml = `
         
           <div class="py-5 lg:py-10 flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between">
             <div class="flex items-center gap-2">
-              <img class="w-5" src="static/images/img.svg" alt="Photo icon">
-              <label class="text-md lg:text-lg">Photo</label>
+              <img class="w-4 lg:w-5" src="static/images/img.svg" alt="Photo icon">
+              <label class="text-sm lg:text-lg">Photo</label>
             </div>
             <div class="flex w-full lg:w-[365px]">
-
               <label>
                 <input 
                   id="projectImage"
                   type="file" 
                   name="projectImage" 
                   accept="image/png, image/jpeg"
-                  class="text-sm text-grey-500
-                  file:mr-2 md:file:mr-5 file:py-2 file:px-6
+                  class="text-sm text-grey-500 w-full
+                  file:mr-2 md:file:mr-5 file:py-2 file:px-3 lg:file:px-6
                   file:rounded-full file:border-0
                   file:text-sm file:font-medium
                   file:bg-blue-50 file:text-blue-700
