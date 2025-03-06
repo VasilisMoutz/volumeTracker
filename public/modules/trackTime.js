@@ -1,5 +1,5 @@
 const header = `
-  <div class="flex items-center p-10 justify-between flex-auto gap-4">
+  <div class="flex items-center mt-10 ml-5 lg:m-10 justify-between flex-auto gap-4">
     <div class="flex flex-col lg:flex-row gap-4 lg:gap-[50px] lg:items-center">
       <h2 class="text-xl font-bold">Track Time</h2>
       <div class="bg-secondary-100">
@@ -46,7 +46,7 @@ export const trackJs = async function(useCache) {
             alt="${project.name} image">
         </div>
         <div 
-          class="h-32 w-full rounded-2xl bg-white text-primary-200
+          class="h-24 lg:h-32 w-full rounded-2xl bg-white text-primary-200
           relative bottom-5 flex items-center justify-center">
             <h3 class="text-2xl">${project.name}<h3>
         <div>

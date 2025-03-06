@@ -3,7 +3,7 @@ import { secondsConverter, monthsConverter  } from "./converters.js";
 export const mainDashboardHtml = `
   <div class="ml-1 mt-10 mr-5 md:m-10">
     <div class="mb-5 md:mb-10 w-full flex justify-between">
-      <h2 class="text-xl font-bold tracking-wide">Analytics</h2>
+      <h2 class="ml-5 lg:ml-0 text-xl font-bold tracking-wide">Analytics</h2>
       <div class="relative">
         <button 
           id="selectedYear"

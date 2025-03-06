@@ -1,18 +1,18 @@
 import { secondsConverter } from "./converters.js";
 
 const frequencyCounter = `
-      <div class="flex items-center text-6xl mt-5">
+      <div class="flex items-center text-5xl lg:text-6xl mt-5">
         <button 
           id="decrease"
-          class="bg-secondary-100 hover:bg-primary-100 transition w-32 h-32 flex justify-center items-center">
-          <p class="text-7xl mb-4">-</p>
+          class="bg-secondary-100 hover:bg-primary-100 transition w-16 h-16 lg:w-32 lg:h-32 flex justify-center items-center">
+          <p class="text-5xl lg:text-7xl mb-4">-</p>
         </button>
-        <div class="w-32 h-32 flex justify-center items-center">
+        <div class="w-16 h-16 lg:w-32 lg:h-32 flex justify-center items-center">
           <p id="count"></p>
         </div>
         <button 
           id="increase"
-          class="bg-secondary-100 hover:bg-primary-100 transition w-32 h-32 flex justify-center items-center">
+          class="bg-secondary-100 hover:bg-primary-100 transition w-16 h-16 lg:w-32 lg:h-32 flex justify-center items-center">
           +
         </button>
       </div>
@@ -51,22 +51,22 @@ function generateHtml(data) {
     <div class="relative">
       <header
         style="background-image: url(${data.image})"
-        class="h-64 w-full bg-cover bg-center bg-no-repeat opacity-50">
+        class="h-44 lg:h-64 w-full bg-cover bg-center bg-no-repeat opacity-50">
       </header>
-      <div class="absolute top-0 pt-10 pl-10">
-        <h1 class="text-5xl font-bold">${data.name}</h1>
+      <div class="absolute top-0 pt-5 lg:pt-10 pl-5 lg:pl-10">
+        <h1 class="text-2xl lg:text-5xl font-bold">${data.name}</h1>
         <p class="text-lg">Total ${volume} ${type} Tracked</p>
       </div>
     </div>
-    <div>
-      <div class="flex items-center justify-center pt-16 flex-col">
-          <h2 class="text-2xl">Today's ${type}</h2>
+    <div class="overflow-hidden">
+      <div class="flex items-center justify-center pt-8 lg:pt-16 flex-col">
+          <h2 class="text-xl lg:text-2xl">Today's ${type}</h2>
           ${counterHtml}
       </div>
       <div class="flex justify-center">
         <button 
           id="submitVolume"
-          class="w-[384px] py-[20px] bg-gradient-to-r from-violet-500 to-fuchsia-500 
+          class="w-full py-3 max-w-[200px] lg:max-w-[384px] lg:py-[20px] bg-gradient-to-r from-violet-500 to-fuchsia-500 
           rounded text-center self-center mt-4">
           ${buttonText}
         </button>

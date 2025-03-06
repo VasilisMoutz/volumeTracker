@@ -85,5 +85,5 @@ export async function signup(req, res) {
 export async function logout(req, res) {
   res.clearCookie("userDetails");
   res.clearCookie("authToken");
-  return res.redirect('/auth/login');
+  return res.redirect('/login');
 } 

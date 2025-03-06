@@ -4,6 +4,7 @@ import { getProjectTrackingHtml, projectTrackingJS } from "./modules/projectTrac
 import { mainDashboardHtml, mainDashboardJs } from "./modules/mainDashboard.js";
 
 const content = document.getElementById("content");
+const logoutBtn = document.getElementById("logoutBtn");
 const navLinks = document.querySelectorAll("button");
 const account = document.getElementById("NameFirstLatter");
 const fullName = document.getElementById("FullName");
@@ -40,6 +41,17 @@ buttons.forEach(button => {
         break;
     }
   })
+})
+
+logoutBtn.addEventListener("click", async () => {
+  try {
+    const response = await fetch('/api/logout', {method: 'POST'});
+    if (response.redirected === true) {
+      window.location.reload();
+    }
+  } catch (err) {
+    console.log(err);
+  }
 })
 
 // handle user goes back
