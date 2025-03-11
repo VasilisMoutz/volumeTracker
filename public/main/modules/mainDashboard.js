@@ -90,7 +90,6 @@ export const mainDashboardHtml = `
   </div>
 `
 export const mainDashboardJs = async function () {
-
   // General Data
   const date = new Date();
   const projects = await getProjects();

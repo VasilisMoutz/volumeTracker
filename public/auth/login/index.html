@@ -10,8 +10,6 @@
 </head>
 <body>
 
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-
   <div class="h-screen w-full bg-cover bg-center flex justify-center items-center" id="loginPage">
       <!-- Login container -->
       <div class="w-full max-w-[540px] text-[#FAFAFA] z-10 backdrop-blur-3xl h-[540px] relative">
@@ -20,9 +18,6 @@
         <!-- Login Content -->
         <div class="relative z-10 my-12 mx-[72px] flex justify-center flex-col">
           <h1 class="text-center text-2xl font-bold tracking-wider">Login</h1>
-
-          <!--Google login-->
-          <div class="g-signin2" data-onsuccess="onSignIn"></div>
           
           <form class="flex flex-col" id="loginForm">
             <label for="username">Username</label>
@@ -35,7 +30,6 @@
         </div>
       </div>
   </div>
-  <script src="https://apis.google.com/js/api:client.js"></script>
   <script src="./login.js"></script>
 </body>
 </html>
