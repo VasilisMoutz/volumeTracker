@@ -3,17 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta name="google-signin-client_id" content="691921096189-2or3q32dupe9ooabif7trosfsv7ubv2u.apps.googleusercontent.com">
+  <title>Effort Track Login</title>
+  <link href="../style.css" rel="stylesheet">
+  <link href="../output.css" rel="stylesheet">
 </head>
 <body>
-  <h1>Login</h1>
-  <form id="loginForm">
-    <label for="username">Username</label>
-    <input name="username" id="username" type="text" autocomplete="username">
-    <label for="password">Password</label>
-    <input name="password" id="password" type="password" autocomplete="current-password">
-    <button type="submit">Submit</button>
-  </form>
+
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+  <div class="h-screen w-full bg-cover bg-center flex justify-center items-center" id="loginPage">
+      <!-- Login container -->
+      <div class="w-full max-w-[540px] text-[#FAFAFA] z-10 backdrop-blur-3xl h-[540px] relative">
+        <!-- Background effect -->
+        <div class="bg-[#111216] opacity-60 absolute w-full h-full top-0"></div>
+        <!-- Login Content -->
+        <div class="relative z-10 my-12 mx-[72px] flex justify-center flex-col">
+          <h1 class="text-center text-2xl font-bold tracking-wider">Login</h1>
+
+          <!--Google login-->
+          <div class="g-signin2" data-onsuccess="onSignIn"></div>
+          
+          <form class="flex flex-col" id="loginForm">
+            <label for="username">Username</label>
+            <input class="text-black" name="username" id="username" type="text" autocomplete="username">
+            <label for="password">Password</label>
+            <input class="text-black" name="password" id="password" type="password" autocomplete="current-password">
+            <button type="submit">Submit</button>
+          </form>
+
+        </div>
+      </div>
+  </div>
+  <script src="https://apis.google.com/js/api:client.js"></script>
   <script src="./login.js"></script>
 </body>
 </html>

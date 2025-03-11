@@ -7,10 +7,7 @@ export async function auth(req, res, next) {
 
   const token = req.cookies?.authToken;
 
-  const authRoute = req.originalUrl === '/auth/signup' || 
-                    req.originalUrl === '/auth/login'
-
-  if (!token && !authRoute) {
+  if (!token) {
     return res.redirect('/auth/login');
   }
 

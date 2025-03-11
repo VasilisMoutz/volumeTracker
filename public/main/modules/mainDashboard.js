@@ -13,7 +13,7 @@ export const mainDashboardHtml = `
           <span>
             <img 
               class="icon w-3" 
-              src="static/images/arrow-down.svg" 
+              src="images/arrow-down.svg" 
               alt="arrow down icon">
           </span>
         </button>
@@ -35,7 +35,7 @@ export const mainDashboardHtml = `
               <span>
                 <img 
                   class="icon w-4" 
-                  src="static/images/clock.svg" 
+                  src="images/clock.svg" 
                   alt="clock icon">
               </span>
               <p>Total volume over time</p>
@@ -44,7 +44,7 @@ export const mainDashboardHtml = `
               class="py-2 bg-[#0A1330] px-6 text-xs tracking-widest rounded-md flex gap-2">
               <img 
                 class="icon w-4" 
-                src="static/images/calendar.svg" 
+                src="images/calendar.svg" 
                 alt="clock icon">
               <span id="chartYear"></span>
             </div>
@@ -61,7 +61,7 @@ export const mainDashboardHtml = `
               </p>
               <img 
                 class="icon w-2" 
-                src="static/images/green-arrow-up.svg" 
+                src="images/green-arrow-up.svg" 
                 alt="arrow up icon">
             </div>
             <div 
@@ -73,7 +73,7 @@ export const mainDashboardHtml = `
               </p>
               <img 
                 class="icon w-2" 
-                src="static/images/red-arrow-down.svg" 
+                src="images/red-arrow-down.svg" 
                 alt="arrow down icon">
             </div>
           </div>

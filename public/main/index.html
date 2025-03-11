@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link href="/static/style.css" rel="stylesheet">
-  <link href="/static/output.css" rel="stylesheet">
+  <link href="./output.css" rel="stylesheet">
+  <link href="./style.css" rel="stylesheet">
 </head>
 <body class="bg-neutral-900 text-white font-mona">
   <div class="flex items-start">
@@ -13,7 +13,7 @@
                 md:border-r-2 border-primary-200 drop-shadow-md px-1.5">
       <div 
         class="flex justify-center py-10 md:justify-normal md:pl-10 md:gap-2">
-        <img src="static/images/logo.svg">
+        <img src="images/logo.svg">
         <h2 class="font-bold text-xl tracking-wider hidden md:block">EffortTrack</h2>
       </div>
       <nav class="flex flex-col justify-between md:pl-7 flex-auto">
@@ -25,7 +25,7 @@
             class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in md:pl-4 justify-center md:justify-normal
                   border-primary-100 md:border-l-4 md:bg-primary-200 md:ml-4 text-white hover:text-white
                   bg-primary-300">
-            <img class="icon w-5 pointer-events-none" src="static/images/home.svg" alt="test">       
+            <img class="icon w-5 pointer-events-none" src="images/home.svg" alt="test">       
             <span class="text-lg pointer-events-none hidden md:block">
               Dashboard
             </span>
@@ -34,7 +34,7 @@
           <button 
             data="create-project"
             class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in md:pl-4 border-primary-100 hover:text-white justify-center md:justify-normal">
-            <img class="icon w-5 pointer-events-none" src="static/images/star.svg" alt="star icon">
+            <img class="icon w-5 pointer-events-none" src="images/star.svg" alt="star icon">
             <span class="text-lg pointer-events-none hidden md:block">
               Create Project
             </span>
@@ -43,7 +43,7 @@
             id="trackTime"
             class="flex gap-2 cursor-pointer rounded py-3 transition-all ease-in md:pl-4 border-primary-100 hover:text-white justify-center md:justify-normal"
             data="track-time">
-            <img class="icon w-5 pointer-events-none" src="static/images/puzzle.svg" alt="puzzle icon">    
+            <img class="icon w-5 pointer-events-none" src="images/puzzle.svg" alt="puzzle icon">    
             <span class="text-lg pointer-events-none hidden md:block">Track Volume</span>
           </button>
         </div>
@@ -60,7 +60,7 @@
             id="logoutBtn"
             data="test"
             class="flex gap-2 text-neutral-100 w-fit">
-            <img class="icon fill-neutral-100 w-8" src="static/images/logout.svg" alt="logout icon">
+            <img class="icon fill-neutral-100 w-8" src="images/logout.svg" alt="logout icon">
             <span class="text-neutral-100 text-lg hover:text-white transition hidden md:block">Logout</span>
           </button>
         </div>
@@ -68,6 +68,6 @@
     </div> 
     <div id="content" class="min-h-screen w-full"></div>
   </div>
-  <script type="module" src="static/main.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>

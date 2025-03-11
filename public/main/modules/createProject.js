@@ -8,7 +8,7 @@ export const createProjectHtml = `
         <div class="px-6 md:px-9 flex flex-col">
           <div class="pt-10 pb-5 lg:py-10 flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between">
             <div class="flex items-center gap-2">
-              <img class="w-4 lg:w-5" src="static/images/project.svg" alt="project icon">
+              <img class="w-4 lg:w-5" src="../images/project.svg" alt="project icon">
               <label class="text-sm lg:text-lg">Project Name</label>
             </div>
             <input 
@@ -19,7 +19,7 @@ export const createProjectHtml = `
           </div>
           <div class="py-5 lg:py-10 flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between">
             <div class="flex items-center gap-2">
-              <img class="w-4 lg:w-5" src="static/images/trophy.svg" alt="project icon">
+              <img class="w-4 lg:w-5" src="../images/trophy.svg" alt="project icon">
               <label class="text-sm lg:text-lg">Tracking Type</label>
             </div>
             <fieldset class="flex w-full lg:w-[365px] gap-2 md:gap-5">
@@ -58,7 +58,7 @@ export const createProjectHtml = `
         
           <div class="py-5 lg:py-10 flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between">
             <div class="flex items-center gap-2">
-              <img class="w-4 lg:w-5" src="static/images/img.svg" alt="Photo icon">
+              <img class="w-4 lg:w-5" src="../images/img.svg" alt="Photo icon">
               <label class="text-sm lg:text-lg">Photo</label>
             </div>
             <div class="flex w-full lg:w-[365px]">

@@ -1,16 +1,12 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { scheduleProjectsJob } from './jobs/processProjectsVolume.js'
-
-import generic from './routes/generic.route.js';
+import { auth } from './middlewares/auth.js';
 import users from './routes/user.route.js'
 import projects from './routes/project.route.js'
-import staticFiles from './routes/static.route.js'
-import authPages from './routes/authPages.route.js'
-
+import { redirect } from './middlewares/redirect.js';
 
 const app = express();
 const uri = process.env.DB_URI;
@@ -26,11 +22,14 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
-app.use('/api', projects);
-app.use('/static', staticFiles);
-app.use('/auth', authPages);
 app.use('/api', users);
-app.use(generic);
+app.use('/api', projects);
+app.use('/auth', redirect, express.static('public/auth'))
+app.use(auth, express.static('public/main'));
+app.get('*', auth, (req, res) => {
+  res.redirect('/');
+})
+
 
 scheduleProjectsJob()
 

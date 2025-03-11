@@ -1,5 +1,5 @@
-import { createProjectHtml, createProjectJs } from "/static/modules/createProject.js";
-import { trackTimeHtml, trackJs } from "/static/modules/trackTime.js"
+import { createProjectHtml, createProjectJs } from "./modules/createProject.js";
+import { trackTimeHtml, trackJs } from "./modules/trackTime.js"
 import { getProjectTrackingHtml, projectTrackingJS } from "./modules/projectTracking.js";
 import { mainDashboardHtml, mainDashboardJs } from "./modules/mainDashboard.js";
 
