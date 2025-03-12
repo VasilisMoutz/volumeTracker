@@ -30,7 +30,6 @@ app.get('*', auth, (req, res) => {
   res.redirect('/');
 })
 
-
 scheduleProjectsJob()
 
 let PORT = process.env.PORT || 3000;

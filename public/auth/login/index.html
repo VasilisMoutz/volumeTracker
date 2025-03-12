@@ -12,24 +12,72 @@
 
   <div class="h-screen w-full bg-cover bg-center flex justify-center items-center" id="loginPage">
       <!-- Login container -->
-      <div class="w-full max-w-[540px] text-[#FAFAFA] z-10 backdrop-blur-3xl h-[540px] relative">
+      <div class="w-full max-w-[540px] z-10 backdrop-blur-3xl mx-4
+                  relative border rounded-2xl border-[#444453]">
         <!-- Background effect -->
-        <div class="bg-[#111216] opacity-60 absolute w-full h-full top-0"></div>
+        <div class="bg-[#111216] opacity-60 absolute w-full h-full top-0 rounded-2xl"></div>
         <!-- Login Content -->
-        <div class="relative z-10 my-12 mx-[72px] flex justify-center flex-col">
-          <h1 class="text-center text-2xl font-bold tracking-wider">Login</h1>
+        <div class="relative z-10 my-12 flex justify-center items-center flex-col">
+          <h1 class="text-center text-2xl font-bold tracking-wider text-[#FAFAFA]">Login to your account</h1>
           
-          <form class="flex flex-col" id="loginForm">
-            <label for="username">Username</label>
-            <input class="text-black" name="username" id="username" type="text" autocomplete="username">
-            <label for="password">Password</label>
-            <input class="text-black" name="password" id="password" type="password" autocomplete="current-password">
-            <button type="submit">Submit</button>
+          <form class="flex flex-col text-[#D1D1D6] gap-6 mt-8 w-full max-w-[396px] px-5 md:px-0" id="loginForm">
+            <div class="flex flex-col gap-3">
+              <div class="flex gap-3 items-center">
+                <label
+                  class="text-base" 
+                  for="username">Username
+                </label>
+                <span 
+                  data-usernameRequired="true"
+                  class="text-xs text-red-400 hidden">This is a required field</span>
+              </div>
+              <input 
+                  class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
+                        outline-none focus:border-violet-500 focus:-outline-offset-2 focus:outline-violet-500"
+                  placeholder="Enter your username" 
+                  name="username" 
+                  id="username" 
+                  type="text"
+                  autocomplete="username"
+                  >
+            </div>
+            <div class="flex flex-col gap-3">
+              <div class="flex gap-3 items-center">
+                <label
+                  class="text-base" 
+                  for="password">Password
+                </label>
+                <span 
+                  data-passwordRequired="true"
+                  class="text-xs text-red-400 hidden">This is a required field.</span>
+                <span 
+                  data-passwordFormat="true"
+                  class="text-xs text-red-400 hidden">
+                    Password must be 8+ characters, one uppercase, one lowercase letter.
+                  </span>
+              </div>
+              <input 
+                  class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
+                        outline-none focus:border-violet-500 focus:-outline-offset-2 focus:outline-violet-500"
+                  placeholder="Enter your password" 
+                  name="password" 
+                  id="password" 
+                  type="password" 
+                  autocomplete="current-password"
+                  >
+            </div>
+           
+            <button 
+              class="w-full bg-[#1470EF] p-4 rounded-lg font-semibold"
+              type="submit">
+              Login now
+            </button>
           </form>
-
+          <span class="text-[#70707B] text-center mt-8">Don't Have An Account ? <a href="/auth/signup" class="text-[#A0A0AB]">Sign Up</a></span>
         </div>
       </div>
   </div>
+
   <script src="./login.js"></script>
 </body>
 </html>

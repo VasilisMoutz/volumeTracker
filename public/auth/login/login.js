@@ -1,3 +1,8 @@
+const strongPassword = new RegExp("^(?=.*[a-z])(?=.*[A-Z]).{8,}$");
+const errorMessges = [document.querySelector(`[data-passwordFormat]`)];
+
+errorMessges.push()
+
 document.getElementById('loginForm').addEventListener('submit', async (event) => {
   event.preventDefault();
 
@@ -5,9 +10,36 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
   const formData = new FormData(form);
   const data = {};
 
+  let formOk;
+
   formData.forEach((value, key) => {
+    formOk = true;
+
+    if (!value) {
+      formOk = false;
+      requiredNotify.push(key)
+    } else {
+      requiredNotify.pop(key)
+    }
+
+    if (key === 'password') {
+
+      const passwordOk = strongPassword.test(value)
+      if (!passwordOk && value) {
+        document.querySelector(`[data-passwordFormat]`).classList.remove('hidden');
+        formOk = false;
+      }
+    }
     data[key] = value;
   })
+
+  requiredNotify.forEach((field) => {
+    document.querySelector(`[data-${field}Required]`).classList.remove('hidden');
+  })
+
+  if (!formOk) {
+    return;
+  }
 
   try {
     const response = await fetch('/api/login', {

@@ -49,6 +49,8 @@ export async function login(req, res) {
 }
 
 export async function signup(req, res) {
+  console.log('test');
+  return res.status(200);
 
   const saltRounds = Number(process.env.SALT_ROUNDS);
 

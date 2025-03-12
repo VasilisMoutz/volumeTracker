@@ -4,30 +4,87 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link href="../style.css" rel="stylesheet">
+  <link href="../output.css" rel="stylesheet">
 </head>
 <body>
-  <h1>Signup</h1>
-  <form 
-    id="signupForm"
-    class="flex">
-    <div>
-      <label for="username">Username</label>
-      <input type="text" name="username" id="username" autocomplete="username">
+  <div class="w-full bg-cover bg-center flex justify-center items-center" id="loginPage">
+    <!-- Login container -->
+    <div class="w-full max-w-[540px] z-10 backdrop-blur-3xl m-4
+                relative border rounded-2xl border-[#444453]">
+      <!-- Background effect -->
+      <div class="bg-[#111216] opacity-60 absolute w-full h-full top-0 rounded-2xl"></div>
+      <!-- Login Content -->
+      <div class="relative z-10 my-12 flex justify-center items-center flex-col">
+        <h1 class="text-center text-2xl font-bold tracking-wider text-[#FAFAFA]">Create an account</h1>
+        
+        <form 
+          id="signupForm"
+          class="flex flex-col text-[#D1D1D6] gap-6 mt-8 w-full max-w-[396px] px-5 md:px-0" id="loginForm">
+          <div class="flex flex-col gap-3">
+            <label
+              class="text-base" 
+              for="username">Username</label>
+            <input 
+                class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
+                      outline-none focus:border-violet-500 focus:-outline-offset-2 focus:outline-violet-500"
+                placeholder="Enter your username" 
+                name="username" 
+                id="username" 
+                type="text"
+                autocomplete="username">
+          </div>
+          <div class="flex flex-col gap-3">
+            <label
+            class="text-base" 
+            for="password">Password</label>
+            <input 
+                class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
+                      outline-none focus:border-violet-500 focus:-outline-offset-2 focus:outline-violet-500"
+                placeholder="Enter your password" 
+                name="password" 
+                id="password" 
+                type="password" 
+                autocomplete="current-password">
+          </div>
+          <div class="flex flex-col gap-3">
+            <label
+              class="text-base" 
+              for="firstname">Firstname</label>
+            <input 
+                class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
+                      outline-none focus:border-violet-500 focus:-outline-offset-2 focus:outline-violet-500"
+                placeholder="Enter your firstname" 
+                name="firstname" 
+                id="firstname" 
+                type="text"
+                autocomplete="firstname">
+          </div>
+          <div class="flex flex-col gap-3">
+            <label
+              class="text-base" 
+              for="lastname">Lastname</label>
+            <input 
+                class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
+                      outline-none focus:border-violet-500 focus:-outline-offset-2 focus:outline-violet-500"
+                placeholder="Enter your lastname" 
+                name="lastname" 
+                id="lastname" 
+                type="text"
+                autocomplete="lastname">
+          </div>
+
+         
+          <button 
+            class="w-full bg-[#1470EF] p-4 rounded-lg font-semibold"
+            type="submit">
+            Create an account
+          </button>
+        </form>
+        <span class="text-[#70707B] text-center mt-8">Already Have An Account ? <a href="/auth/login" class="text-[#A0A0AB]">Login</a></span>
+      </div>
     </div>
-    <div>
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" autocomplete="password">
-    </div>
-    <div>
-      <label for="firstname">Firstname</label>
-      <input type="text" name="firstname" id="firstname" autocomplete="firstname">
-    </div>
-    <div>
-      <label for="lastname">Lastname</label>
-      <input type="text" name="lastname" id="lastname" autocomplete="lastname">
-    </div>
-    <button type="submit">Sign up!</button>
-  </form>
+  </div>
   <script src="./signup.js"></script>
 </body>
 </html>
