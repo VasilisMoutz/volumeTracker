@@ -1,4 +1,4 @@
-import { secondsConverter } from "./converters.js";
+import { secondsConverter } from "./helpers.js";
 
 const frequencyCounter = `
       <div class="flex items-center text-5xl lg:text-6xl mt-5">

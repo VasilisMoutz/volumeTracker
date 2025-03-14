@@ -14,6 +14,7 @@
                 relative border rounded-2xl border-[#444453]">
       <!-- Background effect -->
       <div class="bg-[#111216] opacity-60 absolute w-full h-full top-0 rounded-2xl"></div>
+      
       <!-- Login Content -->
       <div class="relative z-10 my-12 flex justify-center items-center flex-col">
         <h1 class="text-center text-2xl font-bold tracking-wider text-[#FAFAFA]">Create an account</h1>
@@ -22,9 +23,18 @@
           id="signupForm"
           class="flex flex-col text-[#D1D1D6] gap-6 mt-8 w-full max-w-[396px] px-5 md:px-0" id="loginForm">
           <div class="flex flex-col gap-3">
-            <label
-              class="text-base" 
-              for="username">Username</label>
+            <div class="flex items-center gap-3">
+              <label
+                class="text-base" 
+                for="username">
+                Username
+              </label>
+              <span 
+                data-username="required"
+                class="text-xs text-red-400 hidden">
+                This is a required field
+              </span>
+            </div>
             <input 
                 class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
                       outline-none focus:border-violet-500 focus:-outline-offset-2 focus:outline-violet-500"
@@ -35,9 +45,23 @@
                 autocomplete="username">
           </div>
           <div class="flex flex-col gap-3">
-            <label
-            class="text-base" 
-            for="password">Password</label>
+            <div class="flex items-center gap-3">
+              <label
+                class="text-base" 
+                for="password">
+                  Password
+              </label>
+              <span 
+                data-password="required"
+                class="text-xs text-red-400 hidden">
+                This is a required field.
+              </span>
+              <span 
+                data-password="format"
+                class="text-xs text-red-400 hidden">
+                  Password must be 8+ characters, one uppercase, one lowercase letter.
+              </span>
+            </div>
             <input 
                 class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
                       outline-none focus:border-violet-500 focus:-outline-offset-2 focus:outline-violet-500"
@@ -48,22 +72,38 @@
                 autocomplete="current-password">
           </div>
           <div class="flex flex-col gap-3">
-            <label
-              class="text-base" 
-              for="firstname">Firstname</label>
+            <div class="flex items-center gap-3">
+              <label
+                class="text-base" 
+                for="name">Firstname
+              </label>
+              <span 
+                data-name="required"
+                class="text-xs text-red-400 hidden">
+                This is a required field
+              </span>
+            </div>
             <input 
                 class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
                       outline-none focus:border-violet-500 focus:-outline-offset-2 focus:outline-violet-500"
                 placeholder="Enter your firstname" 
-                name="firstname" 
-                id="firstname" 
+                name="name" 
+                id="name" 
                 type="text"
                 autocomplete="firstname">
           </div>
           <div class="flex flex-col gap-3">
-            <label
-              class="text-base" 
-              for="lastname">Lastname</label>
+            <div class="flex items-center gap-3">
+              <label
+                class="text-base" 
+                for="lastname">Lastname
+              </label>
+              <span 
+                data-lastname="required"
+                class="text-xs text-red-400 hidden">
+                This is a required field
+              </span>
+            </div>
             <input 
                 class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
                       outline-none focus:border-violet-500 focus:-outline-offset-2 focus:outline-violet-500"

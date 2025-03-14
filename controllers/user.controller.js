@@ -49,24 +49,22 @@ export async function login(req, res) {
 }
 
 export async function signup(req, res) {
-  console.log('test');
-  return res.status(200);
 
   const saltRounds = Number(process.env.SALT_ROUNDS);
 
   try {
     const { username, password, name, lastname } = req.body;
 
-    if (!username || !password ) {
+    if (!username || !password || !name || !lastname ) {
       throw new Error('Insufficient input data');
     }
 
     const userExists = await User.findOne({username});
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
     if (userExists) {
       throw new Error('User already registered');
     }
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser = new User({
       username,
@@ -75,9 +73,12 @@ export async function signup(req, res) {
       lastname
     })
 
+    console.log('im here')
+
     await newUser.save();
 
   } catch (error) {
+    console.log(error)
     res.status(500).json({message: 'Registration Failed', error: error.message});
     return;
   }

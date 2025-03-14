@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 
 const dateVolumeSchema = new Schema(
   {
-    year: { type: Number, required: true, unique: true },
+    year: { type: Number, required: true },
     0: { type: Number, default: 0 }, // January
     1: { type: Number, default: 0 }, // February
     2: { type: Number, default: 0 }, // March
@@ -38,7 +38,7 @@ const projectSchema = new Schema(
 )
 
 const userSchema = new Schema({
-  username: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   name:     { type: String, required: true },
   lastname: { type: String, required: true },

@@ -28,8 +28,10 @@
                   for="username">Username
                 </label>
                 <span 
-                  data-usernameRequired="true"
-                  class="text-xs text-red-400 hidden">This is a required field</span>
+                  data-username="required"
+                  class="text-xs text-red-400 hidden">
+                    This is a required field
+                </span>
               </div>
               <input 
                   class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 
@@ -48,13 +50,13 @@
                   for="password">Password
                 </label>
                 <span 
-                  data-passwordRequired="true"
+                  data-password="required"
                   class="text-xs text-red-400 hidden">This is a required field.</span>
                 <span 
-                  data-passwordFormat="true"
+                  data-password="format"
                   class="text-xs text-red-400 hidden">
                     Password must be 8+ characters, one uppercase, one lowercase letter.
-                  </span>
+                </span>
               </div>
               <input 
                   class="border border-[#3F3F46] rounded-lg bg-transparent p-4 text-sm 

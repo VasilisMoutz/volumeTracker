@@ -34,7 +34,7 @@ export const createProjectHtml = `
                   checked />
                 <label 
                   for="duration"
-                  class="peer-checked:bg-primary-100 text-xs tracking-widest lg:text-md rounded-md
+                  class="peer-checked:bg-primary-100 peer-checked:border-none text-xs tracking-widest lg:text-md rounded-md
                     border border-secondary-400 py-3 lg:py-4 cursor-pointer w-[110px] lg:w-[140px] flex justify-center">
                     Duration
                  </label>
@@ -47,7 +47,7 @@ export const createProjectHtml = `
                   name="projectType" 
                   value="frequency"/>
                 <label 
-                  class="peer-checked:bg-primary-100 text-xs tracking-widest lg:text-md rounded-md
+                  class="peer-checked:bg-primary-100 peer-checked:border-none text-xs tracking-widest lg:text-md rounded-md
                   border border-secondary-400 py-3 lg:py-4 cursor-pointer w-[110px] lg:w-[140px] flex justify-center"
                   for="frequency">
                     Frequency
@@ -82,7 +82,7 @@ export const createProjectHtml = `
 
           <button 
             type="submit"
-            class="mt-8 lg:mt-0 w-full lg:w-[240px] py-3 lg:py-[14px] bg-gradient-to-r from-violet-500 to-fuchsia-500 
+            class="mt-8 lg:mt-0 w-full lg:w-[240px] py-3 lg:py-[14px] bg-[#F5579D] 
                   rounded text-center self-center mb-8">
             Create Project
           </button>
@@ -96,13 +96,15 @@ export const createProjectJs = function() {
     event.preventDefault();
     const form = event.target;
     const formData = new FormData(form);
-    
+
     try {
       const response = await fetch('/api/project/create', {
         method: 'POST',
         body: formData
       })
 
+      console.log(response)
+      
       if (response.ok) {
         document.getElementById('trackTime').click()
       }

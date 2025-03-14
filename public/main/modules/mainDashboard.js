@@ -1,8 +1,12 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-import { secondsConverter, monthsConverter  } from "./converters.js";
-export const mainDashboardHtml = `
-  <div class="ml-1 mt-10 mr-5 md:m-10">
-    <div class="mb-5 md:mb-10 w-full flex justify-between">
+import { secondsConverter, monthsConverter  } from "./helpers.js";
+import { noProjectsYetHtml, noProjectsYetJs } from "./noProjectsYet.js";
+
+const projects = await getProjects();
+const projectsExist = projects.length;
+
+const header = `
+<div class="mb-5 md:mb-10 w-full flex justify-between">
       <h2 class="ml-5 lg:ml-0 text-xl font-bold tracking-wide">Analytics</h2>
       <div class="relative">
         <button 
@@ -25,74 +29,84 @@ export const mainDashboardHtml = `
 
       </div>
     </div>
-    <div class="flex flex-wrap gap-8 justify-center md:justify-normal">
+`
 
-      <!-- L I N E   C H A R T -->
-      <div class="bg-secondary-100 rounded-2xl hidden md:block">
-        <div class="px-[50px] pt-[30px]">
-          <div class="flex justify-between text-neutral-200">
-            <div class="flex items-center gap-[6px]">
-              <span>
-                <img 
-                  class="icon w-4" 
-                  src="images/clock.svg" 
-                  alt="clock icon">
-              </span>
-              <p>Total volume over time</p>
-            </div>
-            <div 
-              class="py-2 bg-[#0A1330] px-6 text-xs tracking-widest rounded-md flex gap-2">
-              <img 
-                class="icon w-4" 
-                src="images/calendar.svg" 
-                alt="clock icon">
-              <span id="chartYear"></span>
-            </div>
-          </div>
-      
-          <div class="flex items-center pt-[10px] gap-2 text-[10px]">
-            <div id="totalVolume" class="text-2xl"></div>
-            <div 
-              id="increase"
-              class="w-15 h-[18px] border border-[#0C534A] bg-[#0A3942] rounded-sm gap-[1px] px-1 flex items-center hidden">
-              <p 
-                id="increasePercentage"
-                class="text-[#17CA74] flex">
-              </p>
-              <img 
-                class="icon w-2" 
-                src="images/green-arrow-up.svg" 
-                alt="arrow up icon">
-            </div>
-            <div 
-              id="decrease"
-              class="h-[18px] border border-[#602D47] bg-[#3A2341] rounded-sm gap-[1px] px-1 flex items-center hidden">
-              <p 
-                id="decreasePercentage"
-                class="text-[#FF5966] flex">
-              </p>
-              <img 
-                class="icon w-2" 
-                src="images/red-arrow-down.svg" 
-                alt="arrow down icon">
-            </div>
-          </div>
+const pieChartHtml = `
+  <div class="bg-secondary-100 rounded-2xl mt-4 md:mt-0">
+    <div id="circleChart"></div>
+  </div>
+`
+
+const lineChartHtml = `
+  <div class="bg-secondary-100 rounded-2xl hidden md:block">
+    <div class="px-[50px] pt-[30px]">
+      <div class="flex justify-between text-neutral-200">
+        <div class="flex items-center gap-[6px]">
+          <span>
+            <img 
+              class="icon w-4" 
+              src="images/clock.svg" 
+              alt="clock icon">
+          </span>
+          <p>Total volume over time</p>
         </div>
-        <div id="chart" class="flex"></div>
+        <div 
+          class="py-2 bg-[#0A1330] px-6 text-xs tracking-widest rounded-md flex gap-2">
+          <img 
+            class="icon w-4" 
+            src="images/calendar.svg" 
+            alt="clock icon">
+          <span id="chartYear"></span>
+        </div>
       </div>
-
-      <!-- P I E   C H A R T -->
-      <div class="bg-secondary-100 rounded-2xl mt-4 md:mt-0">
-        <div id="circleChart"></div>
+  
+      <div class="flex items-center pt-[10px] gap-2 text-[10px]">
+        <div id="totalVolume" class="text-2xl"></div>
+        <div 
+          id="increase"
+          class="w-15 h-[18px] border border-[#0C534A] bg-[#0A3942] rounded-sm gap-[1px] px-1 flex items-center hidden">
+          <p 
+            id="increasePercentage"
+            class="text-[#17CA74] flex">
+          </p>
+          <img 
+            class="icon w-2" 
+            src="images/green-arrow-up.svg" 
+            alt="arrow up icon">
+        </div>
+        <div 
+          id="decrease"
+          class="h-[18px] border border-[#602D47] bg-[#3A2341] rounded-sm gap-[1px] px-1 flex items-center hidden">
+          <p 
+            id="decreasePercentage"
+            class="text-[#FF5966] flex">
+          </p>
+          <img 
+            class="icon w-2" 
+            src="images/red-arrow-down.svg" 
+            alt="arrow down icon">
+        </div>
       </div>
+    </div>
+    <div id="chart" class="flex"></div>
+  </div>
+`;
 
+export const mainDashboardHtml = `
+  <div class="ml-1 mt-10 mr-5 md:m-10">
+    ${projectsExist ? header : ''}
+    <div class="flex flex-wrap gap-8 justify-center md:justify-normal">
+      ${projectsExist ? lineChartHtml + pieChartHtml : noProjectsYetHtml}
     </div>
   </div>
 `
 export const mainDashboardJs = async function () {
   // General Data
   const date = new Date();
-  const projects = await getProjects();
+  if (!projectsExist) {
+    noProjectsYetJs('main-dash')
+    return;
+  }
   const currentMonth = date.getMonth();
   const currentYear = date.getFullYear();
 
@@ -559,19 +573,19 @@ export const mainDashboardJs = async function () {
 
     return container;
   }
-
-  async function getProjects() {
-    try {
-      const response = await fetch('/api/projects/get', {method: 'GET'});
-      if (response.ok) {
-        const result = await response.json();
-        return result;
-      }
-      else if (response.statusText === 'No token found') {
-        location.reload();
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  } 
 }
+
+async function getProjects() {
+  try {
+    const response = await fetch('/api/projects/get', {method: 'GET'});
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    }
+    else if (response.statusText === 'No token found') {
+      location.reload();
+    }
+  } catch (err) {
+    console.log(err);
+  }
+} 

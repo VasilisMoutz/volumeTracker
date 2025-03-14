@@ -155,52 +155,58 @@ export async function ProjectsGet(req, res) {
 
 export async function ProjectCreate(req, res) {
 
-  // User specific update
-  const token = req.cookies["authToken"];
-
-  // Ensure cookie
-  if (!token) {
-    res.statusMessage = "No token found";
-    res.status(400).end();
-    return;
+  try {
+    // User specific update
+    const token = req.cookies["authToken"];
+  
+    // Ensure cookie
+    if (!token) {
+      res.statusMessage = "No token found";
+      res.status(400).end();
+      return;
+    }
+  
+    const userID = getUserIdFromCookie(token);
+    const validUser = await User.findById(userID);
+  
+    if (!validUser) {
+      return res.status(400).json({message: 'User Not Found'});
+    }
+  
+    // Save Image to AWS
+    const imageName = randomImageName();
+  
+    const params = {
+      Bucket: bucketName,
+      Key: imageName,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype,
+    }
+  
+    const command = new PutObjectCommand(params)
+    await s3.send(command)
+  
+    // Create the object data
+    const date = new Date();
+    const thisYear = date.getFullYear();
+    const dateVol = { year: thisYear }
+  
+    const newProject = {
+      name: req.body.projectName,
+      volumeType: req.body.projectType,
+      image: imageName,
+      dateVolume: dateVol
+    }
+  
+    validUser.projects.push(newProject);
+    await validUser.save();
+  
+    return res.status(201).json(newProject);
+    
+  } catch (err) {
+    console.log('error creating project: ', err)
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
-
-  const userID = getUserIdFromCookie(token);
-  const validUser = await User.findById(userID);
-
-  if (!validUser) {
-    return res.status(400).json({message: 'User Not Found'});
-  }
-
-  // Save Image to AWS
-  const imageName = randomImageName();
-
-  const params = {
-    Bucket: bucketName,
-    Key: imageName,
-    Body: req.file.buffer,
-    ContentType: req.file.mimetype,
-  }
-
-  const command = new PutObjectCommand(params)
-  await s3.send(command)
-
-  // Create the object data
-  const date = new Date();
-  const thisYear = date.getFullYear();
-  const dateVol = { year: thisYear }
-
-  const newProject = {
-    name: req.body.projectName,
-    volumeType: req.body.projectType,
-    image: imageName,
-    dateVolume: dateVol
-  }
-
-  validUser.projects.push(newProject);
-  await validUser.save();
-
-  return res.status(newProject);
 }
 
 function getUserIdFromCookie(cookie) {

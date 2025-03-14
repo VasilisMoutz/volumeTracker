@@ -52,3 +52,23 @@ export function monthsConverter(month, form) {
 
   return form === 'short' ? monthsShort[month] : monthsLong[month];
 }
+
+export async function getProjects(useCache) {
+
+  const url = useCache ? `/api/projects/get?cached=${useCache}` : '/api/projects/get';
+  try {
+    const response = await fetch(url, {method: 'GET'});
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    }
+    else if (response.statusText === 'No token found') {
+      location.reload();
+    }
+    else { 
+      console.error('Error:', response.statusText);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}

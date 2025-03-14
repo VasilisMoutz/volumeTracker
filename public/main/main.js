@@ -16,9 +16,15 @@ const pages = ['Create New Project', 'TRACK VOLUME']
 
 initialLoad();
 
+// specific project clicked
 document.addEventListener('card-clicked', (event) => {
   loadProjectTracking(event.detail)
 });
+
+// create a project clicked
+document.addEventListener('create-project-clicked', () => {
+  console.log('event')
+})
 
 
 // Add event listeners to the nav buttons
