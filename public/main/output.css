@@ -634,6 +634,16 @@ video {
   margin-bottom: 3rem;
 }
 
+.my-3 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.mx-5 {
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
+}
+
 .mb-14 {
   margin-bottom: 3.5rem;
 }
@@ -795,6 +805,10 @@ video {
   width: 100%;
 }
 
+.w-10 {
+  width: 2.5rem;
+}
+
 .min-w-16 {
   min-width: 4rem;
 }
@@ -821,6 +835,10 @@ video {
 
 .max-w-\[540px\] {
   max-width: 540px;
+}
+
+.max-w-\[240px\] {
+  max-width: 240px;
 }
 
 .flex-auto {
@@ -889,6 +907,18 @@ video {
 
 .gap-\[6px\] {
   gap: 6px;
+}
+
+.gap-10 {
+  gap: 2.5rem;
+}
+
+.gap-20 {
+  gap: 5rem;
+}
+
+.gap-12 {
+  gap: 3rem;
 }
 
 .self-center {
@@ -1175,6 +1205,16 @@ video {
   padding-bottom: 1.25rem;
 }
 
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
 .pb-5 {
   padding-bottom: 1.25rem;
 }
@@ -1211,6 +1251,10 @@ video {
   padding-top: 30px;
 }
 
+.pt-12 {
+  padding-top: 3rem;
+}
+
 .text-center {
   text-align: center;
 }
@@ -1225,6 +1269,14 @@ video {
 
 .font-mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.font-sans {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.font-serif {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 .text-2xl {
@@ -1495,6 +1547,16 @@ video {
   padding-bottom: 0.5rem;
 }
 
+.file\:py-3::file-selector-button {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.file\:px-4::file-selector-button {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .file\:text-xs::file-selector-button {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -1591,13 +1653,33 @@ video {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.peer:checked ~ .peer-checked\:border {
+  border-width: 1px;
+}
+
 .peer:checked ~ .peer-checked\:border-none {
   border-style: none;
+}
+
+.peer:checked ~ .peer-checked\:border-transparent {
+  border-color: transparent;
+}
+
+.peer:checked ~ .peer-checked\:border-primary-100 {
+  --tw-border-opacity: 1;
+  border-color: rgb(245 87 157 / var(--tw-border-opacity, 1));
 }
 
 .peer:checked ~ .peer-checked\:bg-primary-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(245 87 157 / var(--tw-bg-opacity, 1));
+}
+
+@media (min-width: 640px) {
+  .sm\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -1690,6 +1772,11 @@ video {
     line-height: 1.75rem;
   }
 
+  .md\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
   .md\:text-white {
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity, 1));
@@ -1711,6 +1798,10 @@ video {
 
   .lg\:mt-0 {
     margin-top: 0px;
+  }
+
+  .lg\:mt-4 {
+    margin-top: 1rem;
   }
 
   .lg\:h-32 {
@@ -1777,6 +1868,18 @@ video {
     padding: 14px;
   }
 
+  .lg\:p-\[28px\] {
+    padding: 28px;
+  }
+
+  .lg\:p-\[18px\] {
+    padding: 18px;
+  }
+
+  .lg\:p-5 {
+    padding: 1.25rem;
+  }
+
   .lg\:py-10 {
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
@@ -1795,6 +1898,21 @@ video {
   .lg\:py-\[20px\] {
     padding-top: 20px;
     padding-bottom: 20px;
+  }
+
+  .lg\:py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .lg\:py-6 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .lg\:py-5 {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
   }
 
   .lg\:pl-10 {
@@ -1838,8 +1956,28 @@ video {
     line-height: 1.75rem;
   }
 
+  .lg\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .lg\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
   .lg\:file\:px-6::file-selector-button {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+  }
+
+  .lg\:file\:py-4::file-selector-button {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .lg\:file\:text-sm::file-selector-button {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
 }

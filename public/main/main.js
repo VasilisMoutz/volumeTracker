@@ -11,6 +11,7 @@ const fullName = document.getElementById("FullName");
 const initialState = content.innerHTML;
 const buttons = document.querySelectorAll('button');
 const dashboardBtn = document.getElementById('dashboard-btn');
+const createBtn = document.getElementById('create-btn');
 let contentHTML;
 const pages = ['Create New Project', 'TRACK VOLUME']
 
@@ -23,7 +24,7 @@ document.addEventListener('card-clicked', (event) => {
 
 // create a project clicked
 document.addEventListener('create-project-clicked', () => {
-  console.log('event')
+  createBtn.click();
 })
 
 

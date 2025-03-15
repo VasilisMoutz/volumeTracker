@@ -1,6 +1,11 @@
 import { getProjects } from "./helpers.js";
 import { noProjectsYetHtml, noProjectsYetJs } from "./noProjectsYet.js";
 
+
+let cache;
+const projects = await getProjects(cache);
+const projectsExist = projects.length;
+
 const header = `
   <div class="flex items-center mt-10 ml-5 lg:m-10 justify-between flex-auto gap-4">
     <div class="flex flex-col lg:flex-row gap-4 lg:gap-[50px] lg:items-center">
@@ -16,22 +21,27 @@ const header = `
   </div>
 `
 
-let main = `
+const projectsContainer = `
   <div 
     class="flex flex-wrap gap-4 p-5 lg:p-10"
     id="projects-container">
   </div>
 `
 
+const create = projectsExist ? header + projectsContainer : noProjectsYetHtml;
+
+export const trackTimeHtml = create;
+
 export const trackJs = async function(useCache) {
-  
-  const projects = await getProjects(useCache);
-  // if (!projects.length) {
 
-  // }
+  if (!projectsExist) {
+    noProjectsYetJs('track');
+    return;
+  }
 
-  const mainContainer = document.getElementById('projects-container');
+  cache = useCache;
   const projectNames = [];
+  const mainContainer = document.getElementById('projects-container');
   document.getElementById('searchBar').addEventListener("input", (event) => {
     const searchText = event.target.value;
     searchProjects(searchText);
@@ -73,24 +83,6 @@ export const trackJs = async function(useCache) {
     });
   }
 
-  // Fetch all projects
-  // async function getProjects() {
-  //   try {
-  //     const response = await fetch(`/api/projects/get?cached=${useCache}`, {method: 'GET'});
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       return result;
-  //     }
-  //     else if (response.statusText === 'No token found') {
-  //       location.reload();
-  //     }
-  //     else { 
-  //       console.error('Error:', response.statusText);
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // } 
   // Add event listener to all cards
   const cards = document.getElementsByClassName('card');
   for (const card of cards) {
@@ -103,4 +95,3 @@ export const trackJs = async function(useCache) {
   }
 };
 
-export const trackTimeHtml = header + main;
