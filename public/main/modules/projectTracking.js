@@ -48,6 +48,7 @@ function generateHtml(data) {
   }
 
   return `
+
     <div class="relative">
       <header
         style="background-image: url(${data.image})"
@@ -58,18 +59,28 @@ function generateHtml(data) {
         <p class="text-lg">Total ${volume} ${type} Tracked</p>
       </div>
     </div>
-    <div class="overflow-hidden">
-      <div class="flex items-center justify-center pt-8 lg:pt-16 flex-col">
-          <h2 class="text-xl lg:text-2xl">Today's ${type}</h2>
-          ${counterHtml}
-      </div>
-      <div class="flex justify-center">
-        <button 
-          id="submitVolume"
-          class="w-full py-3 max-w-[200px] lg:max-w-[384px] lg:py-[20px] bg-gradient-to-r from-violet-500 to-fuchsia-500 
-          rounded text-center self-center mt-4">
-          ${buttonText}
-        </button>
+    <div class="w-full flex justify-center">
+      <div class="overflow-hidden max-w-[200px] lg:max-w-[384px] w-full py-10">
+        <div class="flex items-center justify-center pt-8 lg:pt-16 flex-col">
+            <h2 class="text-xl lg:text-2xl">Today's ${type}</h2>
+            ${counterHtml}
+        </div>
+        <div class="flex justify-center">
+          <button 
+            id="submitVolume"
+            class="w-full py-3 lg:py-[20px] bg-gradient-to-r from-violet-500 to-fuchsia-500 
+            rounded text-center self-center mt-4">
+            ${buttonText}
+          </button>
+        </div>
+
+          <div 
+            id="volumeErrorMessage" 
+            class="bg-red-500 mt-3 md:mt-5 w-full px-7 py-3 relative translate-y-40 rounded-md
+                transition-all duration-700 ease-in-out text-sm flex flex-col items-center">
+              <span class="block">Oh No!</span>Volume is set to zero.
+          </div>
+
       </div>
     </div>
   `
@@ -81,6 +92,7 @@ export const getProjectTrackingHtml = function(data){
 
 export const projectTrackingJS = function(data) { 
   const submitBtn = document.getElementById('submitVolume');
+  const volumeErrorMessage = document.getElementById('volumeErrorMessage');
   let volume;
 
   if (data.type == 'frequency') {
@@ -157,6 +169,11 @@ export const projectTrackingJS = function(data) {
   }
 
   submitBtn.addEventListener('click', async () => {
+    if (!volume) {
+      volumeErrorMessage.classList.remove('translate-y-40');
+      return;
+    }
+
     try {
       const response = await fetch('/api/projects/update', {
         method: 'PUT',

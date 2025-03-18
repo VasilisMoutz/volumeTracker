@@ -1,4 +1,5 @@
 export const createProjectHtml = `
+<div class="overflow-hidden">
   <h2 class="text-xl font-bold tracking-wide mt-10 ml-5 lg:text-center">New Project</h2>
   <div class="flex justify-center text-neutral-500">
       <form 
@@ -64,6 +65,7 @@ export const createProjectHtml = `
             <div class="flex items-center gap-2">
               <img class="w-4 lg:w-5" src="../images/img.svg" alt="Photo icon">
               <label class="text-sm lg:text-lg">Photo</label>
+              <small class="text-xs">( JPG, PNG )</small>
             </div>
             <div class="flex w-full lg:w-[365px]">
               <label>
@@ -93,13 +95,55 @@ export const createProjectHtml = `
         </div>
       </form>
   </div>
+  <div 
+    id="ErrorMessages" 
+    class="flex flex-col gap-3 mt-3 md:mt-5 relative translate-y-40 
+            mx-auto max-w-[350px] lg:max-w-[650px] transition-all duration-700 ease-in-out text-sm">
+      <div
+        data-projectName="required"
+        class="bg-red-500 w-full px-7 py-3 rounded-md flex flex-col items-center hidden">
+        Project name can't be empty.
+      </div>
+      <div 
+        data-projectImage="required"
+        class="bg-red-500 w-full px-7 py-3 rounded-md flex flex-col items-center hidden">
+        Your Project need an image!
+      </div>
+  </div>
+</div>
 `
 
 export const createProjectJs = function() {
+  const ErrorMessages = document.getElementById('ErrorMessages');
+
   document.getElementById('projectForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const form = event.target;
     const formData = new FormData(form);
+    let imageError = false;
+    let nameError = false;
+
+    formData.forEach((value, key) => {
+
+      // ensure image is selected 
+      if (key === 'projectImage') {
+        if (!value.name) {
+          imageError = true;
+          ErrorMessages.querySelector(`[data-${key}]`).classList.remove('hidden');
+        }
+      }
+
+      if (!value) { 
+        nameError = true;
+        ErrorMessages.querySelector(`[data-${key}]`).classList.remove('hidden');
+      }
+
+    })
+    
+    if (nameError || imageError) {
+      ErrorMessages.classList.remove('translate-y-40');
+      return;
+    }
 
     try {
       const response = await fetch('/api/project/create', {

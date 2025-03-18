@@ -42,9 +42,9 @@ buttons.forEach(button => {
         createProjectJs();
         break;
       case 'track-time':
-        const useCache = event.isTrusted;
+        const useCached = event.isTrusted;
         handleNavClick(event, trackTimeHtml,  buttonType);
-        trackJs(useCache);
+        trackJs(useCached);
         break;
     }
   })

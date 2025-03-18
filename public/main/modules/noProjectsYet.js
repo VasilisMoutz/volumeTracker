@@ -16,8 +16,6 @@ export const noProjectsYetHtml = `
 export function noProjectsYetJs(source) {
   const noProjectImg = document.getElementById('noProjectImg');
 
-  console.log(source)
-
   switch(source) {
     case 'main-dash': 
       noProjectImg.src = "../images/noProjectsYet.svg"
@@ -26,8 +24,6 @@ export function noProjectsYetJs(source) {
       noProjectImg.src = "../images/noProjectsYet2.svg"
       break;
   }
-
-  console.log(noProjectImg.src)
 
   document.getElementById('createProject').addEventListener('click', () => {
     const event = new CustomEvent("create-project-clicked");
