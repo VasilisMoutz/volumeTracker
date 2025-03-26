@@ -189,7 +189,8 @@ export const projectTrackingJS = function(data) {
         location.reload();
       }
       if (response.ok) {
-        document.getElementById('trackTime').click();
+        const event = new CustomEvent("fetch-new-projects")
+        document.dispatchEvent(event);
       }
     } catch (err) {
       console.log(err);

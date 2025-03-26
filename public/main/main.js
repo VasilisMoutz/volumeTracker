@@ -1,7 +1,8 @@
 import { createProjectHtml, createProjectJs } from "./modules/createProject.js";
-import { trackTimeHtml, trackJs } from "./modules/trackTime.js"
+import { getTrackTimeHtml, trackJs } from "./modules/trackTime.js"
 import { getProjectTrackingHtml, projectTrackingJS } from "./modules/projectTracking.js";
-import { mainDashboardHtml, mainDashboardJs } from "./modules/mainDashboard.js";
+import { getMainDashboardHtml, mainDashboardJs } from "./modules/mainDashboard.js";
+import { getProjects } from "./modules/helpers.js";
 
 const content = document.getElementById("content");
 const logoutBtn = document.getElementById("logoutBtn");
@@ -12,19 +13,29 @@ const initialState = content.innerHTML;
 const buttons = document.querySelectorAll('button');
 const dashboardBtn = document.getElementById('dashboard-btn');
 const createBtn = document.getElementById('create-btn');
+const trackBtn = document.getElementById('trackTime');
 let contentHTML;
-const pages = ['Create New Project', 'TRACK VOLUME']
+const pages = ['createProject', 'TRACK VOLUME', ''];
+let projects;
 
 initialLoad();
 
+// D O C U M E N T - G E N E R A L - E V E N T S
+
 // specific project clicked
 document.addEventListener('card-clicked', (event) => {
-  loadProjectTracking(event.detail)
+  loadProjectTracking(event.detail) // <- load specific-project page
 });
 
-// create a project clicked
+// Create new project clicked ( appears if no projects yet )
 document.addEventListener('create-project-clicked', () => {
-  createBtn.click();
+  createBtn.click(); // <- load create-new page
+})
+
+// Update projects (updated volume or new project created)
+document.addEventListener('fetch-new-projects', async () => {
+  projects = await getProjects();
+  trackBtn.click(); // <- load projects
 })
 
 
@@ -34,17 +45,16 @@ buttons.forEach(button => {
     const buttonType = event.target.getAttribute("data");
     switch (buttonType) {
       case 'dashboard':
-        handleNavClick(event, mainDashboardHtml, '/');
-        mainDashboardJs();
+        handleNavClick(event, getMainDashboardHtml(projects), '/');
+        mainDashboardJs(projects);
         break;
       case 'create-project':
         handleNavClick(event, createProjectHtml,  buttonType);
         createProjectJs();
         break;
       case 'track-time':
-        const useCached = event.isTrusted;
-        handleNavClick(event, trackTimeHtml,  buttonType);
-        trackJs(useCached);
+        handleNavClick(event, getTrackTimeHtml(projects),  buttonType);
+        trackJs(projects);
         break;
     }
   })
@@ -63,16 +73,19 @@ logoutBtn.addEventListener("click", async () => {
 
 // handle user goes back
 window.addEventListener("popstate", (event) => {
+
   if (event.state) {
     contentHTML = event.state;
     if (contentHTML) {
-      pages.forEach(page => {
-        if (contentHTML.includes(page)) {
-            dashboardBtn.click();
-          }
-        });
+      if (contentHTML.includes('createProject')) {
+        createBtn.click();
+      } else if (content.includes('track-time')) {
+        trackBtn.click();
       }
+      return;
     }
+  }
+  dashboardBtn.click()
 });
 
 function handleNavClick(event, html, url) {
@@ -85,8 +98,8 @@ function handleNavClick(event, html, url) {
 function addClickedStyles(event) {
   event.target.setAttribute('active', 'true')
   navLinks.forEach(element => {
-    if (element.getAttribute('active') === 'true'){
-      if (element !== event.target) {
+    if (element.getAttribute('active') === 'true') {
+      if (element.id !== event.target.id) {
         element.classList.remove('md:border-l-4');
         element.classList.remove('md:bg-primary-200');
         element.classList.remove('md:ml-4');
@@ -104,7 +117,7 @@ function addClickedStyles(event) {
   });
 }
 
-function initialLoad() {
+async function initialLoad() {
   history.replaceState(initialState, "", document.location.href);
   const allcookies = document.cookie;
   let pairs = allcookies.split(";");
@@ -121,8 +134,10 @@ function initialLoad() {
 
   fullName.innerHTML = userDetails.firstname + ' ' + userDetails.lastname;
   account.innerHTML = userDetails.firstname[0];
-  content.innerHTML = mainDashboardHtml;
-  mainDashboardJs();
+
+  projects = await getProjects();
+  content.innerHTML = getMainDashboardHtml(projects);
+  mainDashboardJs(projects);
 }
 
 function loadProjectTracking(data) {
@@ -130,4 +145,3 @@ function loadProjectTracking(data) {
   content.innerHTML = getProjectTrackingHtml(data)
   projectTrackingJS(data);
 }
-

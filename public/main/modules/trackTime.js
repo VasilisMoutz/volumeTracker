@@ -1,9 +1,4 @@
-import { getProjects } from "./helpers.js";
 import { noProjectsYetHtml, noProjectsYetJs } from "./noProjectsYet.js";
-
-const projectsFetched = await getProjects();
-const projectsExist = projectsFetched.length;
-const cacheKey = "projects";
 
 const header = `
   <div class="flex items-center mt-10 ml-5 lg:m-10 justify-between flex-auto gap-4">
@@ -27,22 +22,22 @@ const projectsContainer = `
   </div>
 `
 
-const output = projectsExist ? header + projectsContainer : noProjectsYetHtml;
+export const getTrackTimeHtml = function (projects){
+  return `
+    <div id="track-time">${generateHtml(projects)}</div>
+  `
+};
 
-export const trackTimeHtml = output;
+export const trackJs = async function(projects) {
 
-export const trackJs = async function(useCached) {
-
-  if (projectsExist) {
-    // check if a user made an update to the projects volume fetch new data
-    const projects = useCached ? projectsFetched : await getProjects();
-    showProjects(projects);
+  if (projects.length) {
+    projectsJs(projects);
   } else {
     noProjectsYetJs('track');
     return;
   }
   
-  function showProjects(projects){
+  function projectsJs(projects){
     const mainContainer = document.getElementById('projects-container');
 
     // Creating the cards
@@ -98,9 +93,10 @@ export const trackJs = async function(useCached) {
         }
       });
     }
-
-    // Cache the whole thing
-    sessionStorage.setItem(cacheKey, "value");
   }
 };
+
+function generateHtml(projects) {
+  return projects.length ? header + projectsContainer : noProjectsYetHtml;
+}
 

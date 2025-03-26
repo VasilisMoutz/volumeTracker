@@ -1,5 +1,5 @@
 export const createProjectHtml = `
-<div class="overflow-hidden">
+<div class="overflow-hidden" id="createProject">
   <h2 class="text-xl font-bold tracking-wide mt-10 ml-5 lg:text-center">New Project</h2>
   <div class="flex justify-center text-neutral-500">
       <form 
@@ -150,11 +150,10 @@ export const createProjectJs = function() {
         method: 'POST',
         body: formData
       })
-
-      console.log(response)
       
       if (response.ok) {
-        document.getElementById('trackTime').click()
+        const event = new CustomEvent("fetch-new-projects")
+        document.dispatchEvent(event);
       }
       else if (response.statusText === 'No token found') {
         location.reload();

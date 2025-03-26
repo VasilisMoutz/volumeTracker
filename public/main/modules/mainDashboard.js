@@ -2,9 +2,6 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import { secondsConverter, monthsConverter  } from "./helpers.js";
 import { noProjectsYetHtml, noProjectsYetJs } from "./noProjectsYet.js";
 
-const projects = await getProjects();
-const projectsExist = projects.length;
-
 const header = `
 <div class="mb-5 md:mb-10 w-full flex justify-between">
       <h2 class="ml-5 lg:ml-0 text-xl font-bold tracking-wide">Analytics</h2>
@@ -38,7 +35,8 @@ const pieChartHtml = `
 `
 
 const lineChartHtml = `
-  <div class="bg-secondary-100 rounded-2xl hidden md:block">
+  <div
+    class="bg-secondary-100 rounded-2xl hidden md:block">
     <div class="px-[50px] pt-[30px]">
       <div class="flex justify-between text-neutral-200">
         <div class="flex items-center gap-[6px]">
@@ -92,35 +90,64 @@ const lineChartHtml = `
   </div>
 `;
 
-export const mainDashboardHtml = `
-  <div class="ml-1 mt-10 mr-5 md:m-10">
-    ${projectsExist ? header : ''}
-    <div class="flex flex-wrap gap-8 justify-center md:justify-normal">
-      ${projectsExist ? lineChartHtml + pieChartHtml : noProjectsYetHtml}
-    </div>
+const noEntriesYet = `
+  <div 
+    class="flex flex-col justify-center w-full items-center mt-5"
+    id="noEntriesContainer">
+    <h1 class="text-center text-lg md:text-2xl px-4 tracking-wider">Start adding your entries to get started!</h1>
+
+    <img 
+      class="icon" 
+      src="images/noEntries.svg" 
+      alt="arrow down icon">
+
+    <button 
+      id="trackVolumeBtn"
+      class="border border-primary-100 py-3 px-6 mt-6 text-primary-100 tracking-widest rounded-xl
+            hover:bg-primary-100 hover:text-white transition text-sm md:text-lg">
+      Track your volume
+    </button>
+
   </div>
 `
-export const mainDashboardJs = async function () {
-  // General Data
-  const date = new Date();
+
+export const getMainDashboardHtml = (projects) => {
+  const projectsExist = projects.length;
+  return `
+    <div class="ml-1 mt-10 mr-5 md:m-10" id="main-dashboard">
+      ${projectsExist ? header : ''}
+      <div
+        id="dashboard-container"
+       class="flex flex-wrap gap-8 justify-center md:justify-normal">
+        ${projectsExist ? lineChartHtml + pieChartHtml : noProjectsYetHtml}
+      </div>
+    </div>
+  `
+}
+
+export const mainDashboardJs = async function (projects) {
+  
+  const projectsExist = projects.length;
   if (!projectsExist) {
     noProjectsYetJs('main-dash')
     return;
   }
+
+
+  // General
+  const date = new Date();
   const currentMonth = date.getMonth();
   const currentYear = date.getFullYear();
+  const dashboardContainer = document.getElementById('dashboard-container');
 
   // Pie Chart
   const percentageData = getPieChartData(projects);
-  const pieChart = document.getElementById('circleChart');
 
   // Line chart
-  const lineChart = document.getElementById('chart');
   const volumeData = getLineChartData(projects);
   const totalVolume = document.getElementById('totalVolume');
   const increase = document.getElementById('increasePercentage');
   const decrease = document.getElementById('decreasePercentage');
-
 
   // Load current year and buttons to navigate other years
   createYearButtons(volumeData);
@@ -186,13 +213,24 @@ export const mainDashboardJs = async function () {
     // Get data for the year requested
     const lineChartData = volumeData[year];
     const pieChartData = percentageData[year];
+    const yearHasEntries = pieChartData.total;
 
-    // Load to DOM
-    lineChart.replaceChildren(createChart(lineChartData));
-    pieChart.replaceChildren(createPieChart(pieChartData));
-    totalVolume.replaceChildren(getTotalVolume(lineChartData))
-    setVolumePercentage(year, lineChartData);
-    document.getElementById('chartYear').innerText = year
+    // charts will show only if there are entries or looking past years data
+    const loadCharts = yearHasEntries || year !== currentYear;
+    dashboardContainer.innerHTML = loadCharts ? lineChartHtml + pieChartHtml : noEntriesYet;
+
+    if (loadCharts) {
+      document.getElementById('chart').replaceChildren(createChart(lineChartData));
+      document.getElementById('circleChart').replaceChildren(createPieChart(pieChartData));
+      totalVolume.replaceChildren(getTotalVolume(lineChartData))
+      setVolumePercentage(year, lineChartData);
+      document.getElementById('chartYear').innerText = year
+    } else {
+        document.getElementById('trackVolumeBtn').addEventListener('click', () => {
+        const event = new CustomEvent("fetch-new-projects")
+        document.dispatchEvent(event);  
+      })
+    }
   }
 
   function getTotalVolume(yearlyData){
